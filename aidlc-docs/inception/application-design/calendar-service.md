@@ -94,9 +94,9 @@
 | **ScheduledTreatment** | Rich Model | 예정일 엔티티, 상태 전이 규칙, 리마인드 메시지 생성 |
 | **TreatmentStat** | Value Object | 통계 값 객체 |
 | **CycleCalculator** | Domain Service | 시술일 + 주기 → 예정일 계산 (순수 로직, PBT 대상) |
-| **TreatmentRecordRepository** | Port (interface) | 시술 기록 영속성 인터페이스 (FindFutureByCategory 포함) |
+| **TreatmentRecordRepository** | Port (interface) | 시술 기록 영속성 인터페이스 (FindFutureByTreatment 포함) |
 | **ScheduledTreatmentRepository** | Port (interface) | 예정일 영속성 인터페이스 |
-| **CycleRuleClient** | Port (interface) | 추천 주기 조회 인터페이스 |
+| **CycleRuleClient** | Port (interface) | 추천 주기 조회 인터페이스 (treatmentId 기준) |
 | **NotificationClient** | Port (interface) | 알림 발송 인터페이스 |
 | **EventSubscriber** | Port (interface) | 이벤트 수신 인터페이스 |
 
@@ -488,7 +488,7 @@ const (
 ```
 1. schedules := ScheduledTreatmentRepository.FindDue(today)
 2. 각 schedule:
-   a. 해당 카테고리의 미래 예약 존재 여부 확인 (TreatmentRecordRepository.FindFutureByCategory)
+   a. 해당 시술(treatment)의 미래 예약 존재 여부 확인 (TreatmentRecordRepository.FindFutureByTreatment)
    b. 메시지 분기:
       - 미래 예약 있음 → "보톡스 예약이 n월n일에 있어요"
       - 미래 예약 없음 → "보톡스 맞은 지 N일이 됐어요. 다음 시술을 예약해볼까요?"

@@ -4,7 +4,7 @@
 
 | 서비스 | 언어 | 프레임워크 | 포트 |
 |--------|------|-----------|------|
-| Calendar API | Go | net/http (TBD) | 8080 |
+| Calendar API | Go | echo (v4) | 8080 |
 | Event Consumer | Go | (Calendar와 코드 공유) | — |
 | Cron Scheduler | Go | (Calendar와 코드 공유) | — |
 | Admin API | Python | FastAPI | 8081 |
