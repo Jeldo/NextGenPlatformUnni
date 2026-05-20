@@ -4,5 +4,6 @@ COPY pyproject.toml ./
 RUN pip install --no-cache-dir .
 COPY . .
 RUN chmod +x entrypoint.sh
+ENV PYTHONPATH=/app
 EXPOSE 8081
 CMD ["./entrypoint.sh"]
