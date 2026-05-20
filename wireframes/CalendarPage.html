@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CalendarPage — Wireframe</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+      gap: 12px;
+    }
+    .label { font-size: 13px; color: #999; }
+
+    /* Phone frame */
+    .device {
+      width: 402px;
+      height: 874px;
+      position: relative;
+      background: #fff;
+      border-radius: 44px;
+      border: 8px solid #131517;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    .screen { height: 100%; overflow-y: auto; }
+
+    /* Annotation */
+    .ann { font-size: 10px; color: #bbb; padding: 2px 16px; }
+
+    /* Header */
+    .header {
+      padding: 16px 20px 8px;
+      background: #EFF2F5;
+    }
+    .header-title { font-size: 22px; font-weight: 700; color: #131517; margin-bottom: 4px; }
+    .header-today { font-size: 13px; color: #697683; }
+
+    /* Weekly Calendar Grid */
+    .week-grid-wrap { border-bottom: 0.5px solid rgba(0,0,0,0.08); }
+    .week-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 12px 0;
+    }
+    .week-nav-btn { background: none; border: none; font-size: 18px; color: #697683; cursor: pointer; padding: 4px 6px 4px 0; }
+    .week-nav-label { font-size: 12px; color: #697683; font-weight: 500; }
+    .week-day-labels {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      padding: 10px 8px 4px; gap: 2px;
+    }
+    .day-label { text-align: center; font-size: 11px; color: #697683; }
+    .week-cells {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      padding: 0 8px 8px; gap: 2px;
+    }
+    .day-cell {
+      min-height: 72px; padding: 4px 2px;
+      display: flex; flex-direction: column; gap: 3px;
+      cursor: pointer; border-radius: 6px;
+      overflow: hidden;
+    }
+    .day-cell:hover { background: #fafafa; }
+    .day-num {
+      width: 26px; height: 26px; margin: 0 auto 2px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; color: #131517; border-radius: 50%; flex-shrink: 0;
+    }
+    .day-num.today { background: #F66336; color: #fff; font-weight: 700; }
+
+    /* Treatment cards inside cells */
+    .cell-card {
+      border-radius: 3px; padding: 2px 4px;
+      font-size: 10px; line-height: 1.3;
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+      width: 100%;
+    }
+    .cell-card-confirmed {
+      background: #131517; color: #fff;
+      border: none;
+    }
+    .cell-card-scheduled {
+      background: #fff; color: #697683;
+      border: 1.5px dashed #aaa;
+    }
+
+    /* Legend */
+    .legend {
+      display: flex; gap: 12px; padding: 8px 16px;
+      border-bottom: 0.5px solid rgba(0,0,0,0.08);
+    }
+    .legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #697683; }
+    .legend-dot-confirmed { width: 10px; height: 10px; background: #131517; border-radius: 2px; }
+    .legend-dot-scheduled { width: 10px; height: 10px; border: 1.5px dashed #aaa; border-radius: 2px; background: #fff; }
+
+    /* Stats */
+    .stats-section { padding: 20px 20px 100px; }
+    .stats-title { font-size: 17px; font-weight: 700; color: #131517; margin-bottom: 16px; }
+
+    /* Summary cards row */
+    .stats-cards { display: flex; gap: 10px; margin-bottom: 20px; }
+    .stats-card {
+      flex: 1; background: #f7f8fa; border-radius: 10px; padding: 14px 16px;
+    }
+    .stats-card-label { font-size: 12px; color: #697683; margin-bottom: 6px; }
+    .stats-card-value { font-size: 26px; font-weight: 700; color: #131517; }
+    .stats-card-unit { font-size: 14px; font-weight: 400; color: #697683; }
+
+    /* Info rows */
+    .stats-info-rows { margin-bottom: 24px; }
+    .stats-info-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 0.5px solid rgba(0,0,0,0.06);
+    }
+    .stats-info-row:last-child { border-bottom: none; }
+    .stats-info-label { font-size: 14px; color: #131517; }
+    .stats-info-value { font-size: 14px; color: #131517; font-weight: 500; }
+
+    /* Bar chart */
+    .chart-section { margin-top: 8px; }
+    .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .chart-title { font-size: 15px; font-weight: 700; color: #131517; }
+    .chart-link { font-size: 13px; color: #697683; cursor: pointer; }
+    .chart-area { position: relative; height: 160px; display: flex; align-items: flex-end; gap: 0; padding-bottom: 24px; border-bottom: 0.5px solid rgba(0,0,0,0.08); }
+    .chart-bar-group { flex: 1; display: flex; gap: 3px; align-items: flex-end; justify-content: center; position: relative; }
+    .chart-bar {
+      width: 14px; border-radius: 3px 3px 0 0; min-height: 4px;
+    }
+    .chart-bar-label { position: absolute; bottom: -20px; font-size: 11px; color: #697683; white-space: nowrap; }
+    .chart-y-axis { position: absolute; right: 0; top: 0; bottom: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+    .chart-y-label { font-size: 10px; color: #bbb; }
+    .chart-legend { display: flex; gap: 14px; margin-top: 12px; justify-content: center; }
+    .chart-legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #697683; }
+    .chart-legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+    /* FAB */
+    .fab {
+      position: absolute; bottom: 24px; right: 20px;
+      width: 52px; height: 52px;
+      background: #F66336; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(246,99,54,0.45);
+      cursor: pointer; border: none; font-size: 28px; color: #fff;
+    }
+
+    /* Overlay */
+    #overlay {
+      display: none; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.35); z-index: 10;
+    }
+
+    /* Bottom sheet */
+    #bottom-sheet {
+      position: absolute; bottom: -600px; left: 0; right: 0;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      z-index: 11;
+      transition: bottom 0.3s ease;
+      padding: 12px 20px 32px;
+    }
+    .sheet-handle { width: 36px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 16px; }
+    .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .sheet-date-title { font-size: 15px; font-weight: 600; color: #131517; }
+    .sheet-close { background: none; border: none; font-size: 20px; color: #697683; cursor: pointer; line-height: 1; }
+    .sheet-add-btn {
+      width: 100%; padding: 11px;
+      border: 1.5px dashed #F66336; border-radius: 8px;
+      background: none; color: #F66336; font-size: 14px; font-weight: 500;
+      margin-bottom: 14px; cursor: pointer;
+    }
+
+    /* Cards in sheet */
+    .record-card {
+      border: 2px solid #131517; border-radius: 10px;
+      padding: 12px 14px; margin-bottom: 8px; cursor: pointer;
+    }
+    .schedule-card {
+      border: 2px dashed #aaa; border-radius: 10px;
+      padding: 12px 14px; margin-bottom: 8px; cursor: pointer;
+    }
+    .card-title { font-size: 14px; font-weight: 600; color: #131517; }
+    .card-sub { font-size: 12px; color: #697683; margin-top: 3px; }
+    .card-badge {
+      display: inline-block; font-size: 10px;
+      border: 0.5px solid #ddd; border-radius: 4px;
+      padding: 1px 6px; color: #697683; margin-top: 5px;
+    }
+
+    /* Schedule confirm modal */
+    #confirm-modal {
+      display: none; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.4); z-index: 20;
+      align-items: center; justify-content: center;
+    }
+    #confirm-modal.show { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 14px;
+      padding: 24px 20px; width: 300px; text-align: center;
+    }
+    .modal-title { font-size: 16px; font-weight: 600; color: #131517; margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: #697683; margin-bottom: 20px; line-height: 1.5; }
+    .modal-actions { display: flex; gap: 8px; }
+    .modal-cancel {
+      flex: 1; padding: 12px;
+      border: 0.5px solid #ddd; border-radius: 8px;
+      background: #fff; font-size: 15px; color: #131517; cursor: pointer;
+    }
+    .modal-confirm {
+      flex: 1; padding: 12px; border: none;
+      border-radius: 8px; background: #F66336;
+      font-size: 15px; color: #fff; font-weight: 600; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<p class="label">CalendarPage — 날짜 탭 → DateBottomSheet | 예정 카드 탭 → ScheduleConfirmModal</p>
+
+<div class="device">
+  <div class="screen">
+
+    <!-- Header + WeeklyCalendarGrid in gray box -->
+    <div class="header">
+      <div class="header-title">2026년 1월</div>
+    </div>
+    <div style="background:#EFF2F5;padding:0 12px 16px;margin-top:-1px;">
+      <div style="background:#fff;border-radius:12px;padding:10px 8px 8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 8px 8px;">
+          <div style="display:flex;align-items:center;gap:4px;">
+            <button class="week-nav-btn" onclick="changeWeek(-1)">‹</button>
+            <span class="week-nav-label" id="week-label">1월 12일 — 1월 18일</span>
+            <button class="week-nav-btn" onclick="changeWeek(1)">›</button>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div class="legend-item"><div class="legend-dot-confirmed"></div>확정</div>
+            <div class="legend-item"><div class="legend-dot-scheduled"></div>예정</div>
+          </div>
+        </div>
+        <div class="week-day-labels">
+          <div class="day-label">일</div>
+          <div class="day-label">월</div>
+          <div class="day-label">화</div>
+          <div class="day-label">수</div>
+          <div class="day-label">목</div>
+          <div class="day-label">금</div>
+          <div class="day-label">토</div>
+        </div>
+        <div class="week-cells" id="week-cells"></div>
+      </div>
+    </div>
+
+
+    <!-- TreatmentStats -->
+    <div class="stats-section">
+      <div class="stats-title">나의 시술</div>
+
+      <!-- Summary cards -->
+      <div class="stats-cards">
+        <div class="stats-card">
+          <div class="stats-card-label">이번 달 시술</div>
+          <div class="stats-card-value">3<span class="stats-card-unit">회</span></div>
+        </div>
+        <div class="stats-card">
+          <div class="stats-card-label">누적 시술</div>
+          <div class="stats-card-value">12<span class="stats-card-unit">회</span></div>
+        </div>
+      </div>
+
+      <!-- Info rows -->
+      <div class="stats-info-rows">
+        <div class="stats-info-row">
+          <span class="stats-info-label">마지막 시술</span>
+          <span class="stats-info-value">1월 15일 · 필러</span>
+        </div>
+        <div class="stats-info-row">
+          <span class="stats-info-label">다음 예정일</span>
+          <span class="stats-info-value">1월 17일 · 보톡스</span>
+        </div>
+        <div class="stats-info-row">
+          <span class="stats-info-label">가장 많은 시술</span>
+          <span class="stats-info-value">보톡스 (5회)</span>
+        </div>
+      </div>
+
+      <!-- Bar chart -->
+      <div class="chart-section">
+        <div class="chart-header">
+          <span class="chart-title">월별 시술 횟수</span>
+          <span class="chart-link">전체보기 ›</span>
+        </div>
+        <div style="position:relative;">
+          <div class="chart-area">
+            <div class="chart-bar-group">
+              <div class="chart-bar" style="height:24px;background:#131517;"></div>
+              <div class="chart-bar" style="height:40px;background:#697683;"></div>
+              <div class="chart-bar" style="height:16px;background:#F66336;"></div>
+              <span class="chart-bar-label">10월</span>
+            </div>
+            <div class="chart-bar-group">
+              <div class="chart-bar" style="height:32px;background:#131517;"></div>
+              <div class="chart-bar" style="height:24px;background:#697683;"></div>
+              <div class="chart-bar" style="height:32px;background:#F66336;"></div>
+              <span class="chart-bar-label">11월</span>
+            </div>
+            <div class="chart-bar-group">
+              <div class="chart-bar" style="height:56px;background:#131517;"></div>
+              <div class="chart-bar" style="height:16px;background:#697683;"></div>
+              <div class="chart-bar" style="height:24px;background:#F66336;"></div>
+              <span class="chart-bar-label">12월</span>
+            </div>
+            <div class="chart-bar-group">
+              <div class="chart-bar" style="height:40px;background:#131517;"></div>
+              <div class="chart-bar" style="height:32px;background:#697683;"></div>
+              <div class="chart-bar" style="height:48px;background:#F66336;"></div>
+              <span class="chart-bar-label">1월<br><span style="font-size:10px;color:#bbb;">2026</span></span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#131517;"></div>보톡스</div>
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#697683;"></div>필러</div>
+          <div class="chart-legend-item"><div class="chart-legend-dot" style="background:#F66336;"></div>레이저</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FloatingAddButton -->
+  <button class="fab">+</button>
+
+  <!-- Overlay -->
+  <div id="overlay" onclick="closeSheet()"></div>
+
+  <!-- DateBottomSheet -->
+  <div id="bottom-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <span class="sheet-date-title" id="sheet-date-label">2026년 1월 15일 (수)</span>
+      <button class="sheet-close" onclick="closeSheet()">✕</button>
+    </div>
+    <button class="sheet-add-btn">+ 이 날짜에 시술 추가</button>
+    <div id="sheet-body"></div>
+  </div>
+
+  <!-- ScheduleConfirmModal -->
+  <div id="confirm-modal">
+    <div class="modal-box">
+      <div class="modal-title">이 날짜에 시술을 받으셨나요?</div>
+      <div class="modal-desc">예정일을 확정 기록으로<br>변환합니다.</div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeModal()">삭제</button>
+        <button class="modal-confirm" onclick="closeModal()">받았어요</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let weekOffset = 0;
+  const baseStart = new Date(2026, 0, 11); // 1월 11일 (일)
+  const today = new Date(2026, 0, 15);
+
+  // Sample data keyed by YYYY-M-D
+  const sampleData = {
+    '2026-1-13': [{ type: 'confirmed', text: '강남언니 / 보톡스' }],
+    '2026-1-15': [{ type: 'confirmed', text: '뷰티의원 / 필러' }, { type: 'scheduled', text: '레이저 (예정)' }],
+    '2026-1-17': [{ type: 'scheduled', text: '보톡스 (예정)' }],
+  };
+
+  function fmt(d) { return `${d.getMonth()+1}월 ${d.getDate()}일`; }
+  function key(d) { return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
+
+  function renderWeek() {
+    const start = new Date(baseStart);
+    start.setDate(start.getDate() + weekOffset * 7);
+    const end = new Date(start); end.setDate(end.getDate() + 6);
+    document.getElementById('week-label').textContent = `${fmt(start)} — ${fmt(end)}`;
+
+    const cells = document.getElementById('week-cells');
+    cells.innerHTML = '';
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(start); d.setDate(d.getDate() + i);
+      const isToday = d.toDateString() === today.toDateString();
+      const dayNames = ['일','월','화','수','목','금','토'];
+      const label = `${d.getMonth()+1}월 ${d.getDate()}일 (${dayNames[d.getDay()]})`;
+      const cards = (sampleData[key(d)] || []).map(c =>
+        `<div class="cell-card cell-card-${c.type}">${c.text}</div>`
+      ).join('');
+      cells.innerHTML += `
+        <div class="day-cell" onclick="openSheet('${label}')">
+          <div class="day-num${isToday ? ' today' : ''}">${d.getDate()}</div>
+          ${cards}
+        </div>`;
+    }
+  }
+
+  function changeWeek(dir) {
+    weekOffset += dir;
+    renderWeek();
+  }
+
+  renderWeek();
+  const sheetData = {
+    '1월 13일 (화)': { records: [{ title: '보톡스 — 강남언니의원', sub: '2026.01.13' }], schedules: [] },
+    '1월 15일 (목)': {
+      records: [{ title: '필러 — 뷰티의원', sub: '2026.01.15' }],
+      schedules: [{ title: '레이저 (예정)', sub: '추천 주기 기반' }]
+    },
+    '1월 17일 (토)': { records: [], schedules: [{ title: '보톡스 (예정)', sub: '추천 주기 기반' }] }
+  };
+
+  function openSheet(dateLabel) {
+    document.getElementById('sheet-date-label').textContent = '2026년 ' + dateLabel;
+    const data = sheetData[dateLabel] || { records: [], schedules: [] };
+    let html = '';
+    data.records.forEach(r => {
+      html += `<div class="record-card"><div class="card-title">${r.title}</div><div class="card-sub">${r.sub}</div><div class="card-badge">확정</div></div>`;
+    });
+    data.schedules.forEach(s => {
+      html += `<div class="schedule-card" onclick="openModal()"><div class="card-title">${s.title}</div><div class="card-sub">${s.sub}</div><div class="card-badge">예정 — 탭하여 확인</div></div>`;
+    });
+    if (!html) html = '<div style="text-align:center;padding:20px;font-size:13px;color:#bbb;">이 날짜에 시술 기록이 없습니다</div>';
+    document.getElementById('sheet-body').innerHTML = html;
+    document.getElementById('overlay').style.display = 'block';
+    setTimeout(() => { document.getElementById('bottom-sheet').style.bottom = '0'; }, 10);
+  }
+
+  function closeSheet() {
+    document.getElementById('bottom-sheet').style.bottom = '-600px';
+    setTimeout(() => { document.getElementById('overlay').style.display = 'none'; }, 300);
+  }
+
+  function openModal() { document.getElementById('confirm-modal').classList.add('show'); }
+  function closeModal() { document.getElementById('confirm-modal').classList.remove('show'); }
+</script>
+
+</body>
+</html>

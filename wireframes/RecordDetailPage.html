@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RecordDetailPage — Wireframe</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; padding: 32px 16px; gap: 12px;
+    }
+    .label { font-size: 13px; color: #999; }
+    .device {
+      width: 375px; height: 780px; position: relative;
+      background: #fff; border-radius: 44px; border: 8px solid #131517;
+      overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    .screen { height: 100%; overflow-y: auto; }
+    .ann { font-size: 10px; color: #bbb; padding: 2px 16px; }
+
+    .header {
+      padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 0.5px solid rgba(0,0,0,0.1); position: sticky; top: 0; background: #fff; z-index: 1;
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .back-btn { background: none; border: none; font-size: 20px; color: #131517; cursor: pointer; }
+    .header-title { font-size: 17px; font-weight: 600; color: #131517; }
+    .header-actions { position: relative; }
+    .more-btn {
+      background: none; border: none; font-size: 22px; color: #131517;
+      cursor: pointer; padding: 4px 8px; line-height: 1;
+    }
+    .dropdown-menu {
+      display: none; position: absolute; right: 0; top: 36px;
+      background: #fff; border: 0.5px solid rgba(0,0,0,0.12);
+      border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      overflow: hidden; min-width: 120px; z-index: 5;
+    }
+    .dropdown-menu.open { display: block; }
+    .menu-item {
+      padding: 13px 16px; font-size: 14px; color: #131517;
+      cursor: pointer; display: block; width: 100%;
+      background: none; border: none; text-align: left;
+    }
+    .menu-item:hover { background: #fafafa; }
+    .menu-item.danger { color: #e53e3e; }
+
+    /* Detail — Google Calendar event style */
+    .detail-wrap { padding: 0; }
+    .detail-header {
+      padding: 16px 20px 12px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .detail-header-label { font-size: 13px; color: #697683; }
+    .detail-header-actions { display: flex; align-items: center; gap: 4px; }
+    .icon-btn {
+      background: none; border: none; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: #697683;
+    }
+    .icon-btn:hover { background: #f5f5f5; }
+    .close-btn {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #eee; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: #697683;
+    }
+
+    .detail-title-section { padding: 20px 20px 20px; }
+    .detail-title { font-size: 24px; font-weight: 700; color: #131517; line-height: 1.25; }
+
+    .detail-rows { padding: 0 20px; }
+    .detail-row-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 0.5px solid rgba(0,0,0,0.07);
+    }
+    .detail-row-item:last-child { border-bottom: none; }
+    .row-icon { font-size: 18px; color: #697683; flex-shrink: 0; margin-top: 1px; width: 20px; text-align: center; }
+    .row-content { flex: 1; }
+    .row-main { font-size: 15px; color: #131517; }
+    .row-sub { font-size: 13px; color: #697683; margin-top: 2px; }
+
+    .memo-section { padding: 0 20px 20px; }
+    .memo-label { font-size: 13px; font-weight: 600; color: #131517; margin-bottom: 8px; }
+    .memo-field {
+      width: 100%; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.15); border-radius: 8px;
+      font-size: 14px; color: #697683; background: #fafafa;
+      min-height: 72px; line-height: 1.5;
+    }
+
+    .gcal-section {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 12px 20px 28px; background: #fff;
+      border-top: 0.5px solid rgba(0,0,0,0.08);
+    }
+    .bottom-actions { display: flex; gap: 10px; }
+    .btn-outline {
+      flex: 1; padding: 14px;
+      background: #fff; border: 1.5px solid rgba(0,0,0,0.2); border-radius: 10px;
+      color: #131517; font-size: 15px; font-weight: 500; cursor: pointer;
+    }
+    .btn-primary {
+      flex: 1; padding: 14px;
+      background: #F66336; border: none; border-radius: 10px;
+      color: #fff; font-size: 15px; font-weight: 600; cursor: pointer;
+    }
+
+    /* Edit mode */
+    .edit-section { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field-label { font-size: 13px; font-weight: 600; color: #131517; }
+    .trigger {
+      width: 100%; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px;
+      background: #fff; font-size: 15px; color: #131517;
+      display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    }
+    .chevron { color: #697683; font-size: 13px; }
+    .text-input {
+      width: 100%; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px;
+      font-size: 15px; color: #131517; background: #fff;
+    }
+    .dosage-row { display: flex; gap: 8px; }
+    .dosage-num {
+      flex: 1; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px;
+      font-size: 15px; color: #131517; background: #fff;
+    }
+    .dosage-unit {
+      width: 110px; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px;
+      background: #fff; font-size: 15px; color: #131517;
+      display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    }
+    .save-btn {
+      width: 100%; padding: 14px; background: #F66336; border: none;
+      border-radius: 10px; color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
+    }
+
+    /* gcal-btn now defined in detail section styles above */
+
+    /* Delete modal */
+    #delete-modal {
+      display: none; position: absolute; inset: 0;
+      background: rgba(0,0,0,0.4); z-index: 20;
+      align-items: center; justify-content: center;
+    }
+    #delete-modal.show { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 14px;
+      padding: 24px 20px; width: 300px; text-align: center;
+    }
+    .modal-title { font-size: 16px; font-weight: 600; color: #131517; margin-bottom: 8px; }
+    .modal-desc { font-size: 14px; color: #697683; margin-bottom: 20px; line-height: 1.5; }
+    .modal-actions { display: flex; gap: 8px; }
+    .modal-cancel {
+      flex: 1; padding: 12px; border: 0.5px solid #ddd;
+      border-radius: 8px; background: #fff; font-size: 15px; color: #131517; cursor: pointer;
+    }
+    .modal-confirm {
+      flex: 1; padding: 12px; border: none; border-radius: 8px;
+      background: #e53e3e; font-size: 15px; color: #fff; font-weight: 600; cursor: pointer;
+    }
+
+    .divider { height: 8px; background: #f5f5f5; }
+    .section-label { font-size: 13px; font-weight: 600; color: #131517; padding: 14px 20px 10px; }
+  </style>
+</head>
+<body>
+
+<p class="label">RecordDetailPage — 수정 탭 → 수정 모드 | 삭제 탭 → 확인 모달</p>
+
+<div class="device">
+  <div class="screen">
+
+    <div class="header">
+      <div class="header-left">
+        <button class="back-btn">‹</button>
+        <span class="header-title">시술 상세</span>
+      </div>
+      <div class="header-actions">
+        <button class="more-btn" onclick="toggleMenu()">···</button>
+        <div class="dropdown-menu" id="more-menu">
+          <button class="menu-item danger" onclick="toggleMenu(); openDeleteModal()">삭제</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Read mode -->
+    <div id="read-mode">
+      <div class="detail-title-section">
+        <div class="detail-title">사각턱 보톡스 50U</div>
+      </div>
+
+      <div class="detail-rows">
+        <div class="detail-row-item">
+          <span class="row-icon">🏥</span>
+          <div class="row-content">
+            <div class="row-main">강남언니의원</div>
+          </div>
+        </div>
+        <div class="detail-row-item">
+          <span class="row-icon">📅</span>
+          <div class="row-content">
+            <div class="row-main">2026년 1월 15일 (수)</div>
+          </div>
+        </div>
+        <div class="detail-row-item">
+          <span class="row-icon">📝</span>
+          <div class="row-content">
+            <div class="row-main" style="color:#bbb;">메모 없음</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit mode (hidden by default) -->
+    <div id="edit-mode" style="display:none;">
+      <div class="divider"></div>
+      <div class="section-label">시술 정보 수정</div>
+      <div class="edit-section">
+        <div class="field">
+          <label class="field-label">날짜</label>
+          <div class="trigger"><span>2026년 1월 15일</span><span class="chevron">▼</span></div>
+        </div>
+        <div class="field">
+          <label class="field-label">병원명</label>
+          <input class="text-input" type="text" value="강남언니의원" />
+        </div>
+        <div class="field">
+          <label class="field-label">시술 정보</label>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="trigger"><span>보톡스 (카테고리)</span><span class="chevron">▼</span></div>
+            <div class="trigger"><span>사각턱 보톡스 (시술명)</span><span class="chevron">▼</span></div>
+            <div class="dosage-row">
+              <input class="dosage-num" type="number" value="50" />
+              <div class="dosage-unit"><span>U (단위)</span><span class="chevron">▼</span></div>
+            </div>
+          </div>
+        </div>
+        <button class="save-btn" onclick="toggleEdit()">저장</button>
+      </div>
+    </div>
+
+    <!-- Bottom actions -->
+    <div class="gcal-section" id="gcal-section">
+      <div class="bottom-actions">
+        <button class="btn-outline">구글 캘린더 등록</button>
+        <button class="btn-primary" onclick="toggleEdit()">수정하기</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Delete confirm modal -->
+  <div id="delete-modal">
+    <div class="modal-box">
+      <div class="modal-title">시술 기록 삭제</div>
+      <div class="modal-desc">이 시술 기록을 삭제하시겠습니까?<br>삭제 후 복구할 수 없습니다.</div>
+      <div class="modal-actions">
+        <button class="modal-cancel" onclick="closeDeleteModal()">취소</button>
+        <button class="modal-confirm" onclick="closeDeleteModal()">삭제</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toggleMenu() {
+    document.getElementById('more-menu').classList.toggle('open');
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.header-actions')) {
+      document.getElementById('more-menu').classList.remove('open');
+    }
+  });
+  function toggleEdit() {
+    const read = document.getElementById('read-mode');
+    const edit = document.getElementById('edit-mode');
+    const gcal = document.getElementById('gcal-section');
+    if (edit.style.display === 'none') {
+      read.style.display = 'none';
+      edit.style.display = 'block';
+      gcal.style.display = 'none';
+    } else {
+      edit.style.display = 'none';
+      read.style.display = 'block';
+      gcal.style.display = 'block';
+    }
+  }
+  function openDeleteModal() { document.getElementById('delete-modal').classList.add('show'); }
+  function closeDeleteModal() { document.getElementById('delete-modal').classList.remove('show'); }
+</script>
+
+</body>
+</html>

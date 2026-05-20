@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AddRecordPage — Wireframe</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; padding: 32px 16px; gap: 12px;
+    }
+    .label { font-size: 13px; color: #999; }
+    .device {
+      width: 375px; height: 780px; position: relative;
+      background: #fff; border-radius: 44px; border: 8px solid #131517;
+      overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    }
+    .screen { height: 100%; overflow-y: auto; }
+    .ann { font-size: 10px; color: #bbb; padding: 2px 16px; }
+
+    .header {
+      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+      border-bottom: 0.5px solid rgba(0,0,0,0.1); position: sticky; top: 0; background: #fff; z-index: 1;
+    }
+    .back-btn { background: none; border: none; font-size: 20px; color: #131517; cursor: pointer; }
+    .header-title { font-size: 17px; font-weight: 600; color: #131517; }
+
+    .form { padding: 20px 20px 100px; display: flex; flex-direction: column; gap: 18px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field-label { font-size: 13px; font-weight: 600; color: #131517; }
+    .required { color: #F66336; margin-left: 2px; }
+
+    .trigger {
+      width: 100%; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px;
+      background: #fff; font-size: 15px; color: #131517;
+      display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    }
+    .trigger .chevron { color: #697683; font-size: 13px; }
+    .trigger.disabled { background: #fafafa; color: #bbb; cursor: not-allowed; }
+
+    .text-input {
+      width: 100%; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px;
+      font-size: 15px; color: #131517; background: #fff;
+    }
+    .text-input::placeholder { color: #bbb; }
+
+    .dosage-row { display: flex; gap: 8px; }
+    .dosage-num {
+      flex: 1; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px;
+      font-size: 15px; color: #131517; background: #fff;
+    }
+    .dosage-unit {
+      width: 110px; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px;
+      background: #fff; font-size: 15px; color: #131517;
+      display: flex; justify-content: space-between; align-items: center; cursor: pointer;
+    }
+
+    .textarea {
+      width: 100%; padding: 12px 14px;
+      border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px;
+      font-size: 15px; color: #131517; background: #fff;
+      resize: none; height: 80px;
+    }
+    .textarea::placeholder { color: #bbb; }
+
+    .save-btn {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 12px 20px 28px; background: #fff;
+      border-top: 0.5px solid rgba(0,0,0,0.08);
+    }
+    .save-btn button {
+      width: 100%; padding: 14px;
+      background: #F66336; border: none; border-radius: 10px;
+      color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
+    }
+
+    /* DatePicker bottom sheet */
+    #overlay { display: none; position: absolute; inset: 0; background: rgba(0,0,0,0.35); z-index: 10; }
+    #date-sheet {
+      position: absolute; bottom: -500px; left: 0; right: 0;
+      background: #fff; border-radius: 20px 20px 0 0;
+      z-index: 11; transition: bottom 0.3s ease; padding: 12px 20px 28px;
+    }
+    .sheet-handle { width: 36px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 16px; }
+    .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .sheet-title { font-size: 15px; font-weight: 600; color: #131517; }
+    .sheet-close { background: none; border: none; font-size: 20px; color: #697683; cursor: pointer; }
+
+    .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .cal-month { font-size: 14px; font-weight: 600; color: #131517; }
+    .cal-nav-btn { background: none; border: none; font-size: 16px; color: #697683; cursor: pointer; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; gap: 2px; }
+    .cal-day-label { font-size: 11px; color: #697683; padding: 4px 0; }
+    .cal-day { font-size: 14px; color: #131517; padding: 8px 2px; border-radius: 50%; cursor: pointer; }
+    .cal-day.today { background: #F66336; color: #fff; font-weight: 700; border-radius: 50%; }
+    .cal-day.other { color: #ccc; }
+    .sheet-confirm-btn {
+      width: 100%; margin-top: 12px; padding: 13px;
+      background: #F66336; border: none; border-radius: 8px;
+      color: #fff; font-size: 15px; font-weight: 600; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<p class="label">AddRecordPage — 날짜 필드 탭 → DatePicker 바텀시트</p>
+
+<div class="device">
+  <div class="screen">
+
+    <div class="header">
+      <button class="back-btn">‹</button>
+      <span class="header-title">시술 추가</span>
+    </div>
+
+    <div class="form">
+
+      <div class="ann" style="padding:0;">DatePicker</div>
+      <div class="field">
+        <label class="field-label">날짜<span class="required">*</span></label>
+        <button class="trigger" onclick="openDateSheet()">
+          <span>2026년 1월 15일</span>
+          <span class="chevron">▼</span>
+        </button>
+      </div>
+
+      <div class="ann" style="padding:0;">HospitalInput</div>
+      <div class="field">
+        <label class="field-label">병원명<span class="required">*</span></label>
+        <input class="text-input" type="text" placeholder="병원명을 입력하세요" value="강남언니의원" />
+      </div>
+
+      <div class="ann" style="padding:0;">TreatmentDropdown (3단계)</div>
+      <div class="field">
+        <label class="field-label">시술 정보<span class="required">*</span></label>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="trigger">
+            <span>보톡스 (카테고리)</span><span class="chevron">▼</span>
+          </div>
+          <div class="trigger">
+            <span>사각턱 보톡스 (시술명)</span><span class="chevron">▼</span>
+          </div>
+          <div class="ann" style="padding:0;">DosageInput</div>
+          <div class="dosage-row">
+            <input class="dosage-num" type="number" placeholder="용량" value="50" />
+            <div class="dosage-unit"><span>U (단위)</span><span class="chevron">▼</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ann" style="padding:0;">메모 (선택)</div>
+      <div class="field">
+        <label class="field-label">메모</label>
+        <textarea class="textarea" placeholder="메모를 입력하세요 (선택)"></textarea>
+      </div>
+
+    </div>
+
+  </div><!-- end .screen -->
+
+  <div class="save-btn">
+    <button>저장</button>
+  </div>
+
+  <div id="overlay" onclick="closeDateSheet()"></div>
+
+  <div id="date-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <span class="sheet-title">날짜 선택</span>
+      <button class="sheet-close" onclick="closeDateSheet()">✕</button>
+    </div>
+    <div class="cal-nav">
+      <button class="cal-nav-btn">‹</button>
+      <span class="cal-month">2026년 1월</span>
+      <button class="cal-nav-btn">›</button>
+    </div>
+    <div class="cal-grid">
+      <div class="cal-day-label">일</div><div class="cal-day-label">월</div><div class="cal-day-label">화</div>
+      <div class="cal-day-label">수</div><div class="cal-day-label">목</div><div class="cal-day-label">금</div>
+      <div class="cal-day-label">토</div>
+      <div class="cal-day other">29</div><div class="cal-day other">30</div><div class="cal-day other">31</div>
+      <div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div>
+      <div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div>
+      <div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11</div>
+      <div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div>
+      <div class="cal-day today">15</div>
+      <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div>
+      <div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
+      <div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div>
+      <div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div>
+      <div class="cal-day">30</div><div class="cal-day">31</div>
+    </div>
+    <button class="sheet-confirm-btn" onclick="closeDateSheet()">선택</button>
+  </div>
+
+</div>
+
+<script>
+  function openDateSheet() {
+    document.getElementById('overlay').style.display = 'block';
+    setTimeout(() => { document.getElementById('date-sheet').style.bottom = '0'; }, 10);
+  }
+  function closeDateSheet() {
+    document.getElementById('date-sheet').style.bottom = '-500px';
+    setTimeout(() => { document.getElementById('overlay').style.display = 'none'; }, 300);
+  }
+</script>
+
+</body>
+</html>
