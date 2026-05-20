@@ -183,6 +183,33 @@ Inception 설계 의도가 Construction에서 훼손되지 않도록 **8개 Stee
 | `ai-dlc.json` | AI-DLC 워크플로우 전체 제어 — Inception→Construction 자동 진행 |
 | `wireframe-generator.md` | Inception 문서 기반 HTML 와이어프레임 자동 생성 |
 
+#### 와이어프레임 Agent 상세
+
+디자이너가 **코드를 작성하지 않고도** UI 시안을 빠르게 프로토타이핑할 수 있도록 전용 Agent를 구축했습니다.
+
+**Agent가 하는 일:**
+1. 설계 문서(`web-frontend.md`)를 읽고 페이지별 인터랙티브 HTML 와이어프레임 자동 생성
+2. 이미지 레퍼런스를 제공하면 분석 후 모호한 부분은 질문, 명확한 부분은 즉시 반영
+3. 생성된 HTML을 Puppeteer로 자동 캡처하여 PNG 산출
+
+**활용 흐름:**
+```
+디자이너: "CalendarPage 와이어프레임 만들어줘"
+  → Agent가 web-frontend.md 읽고 HTML 생성
+디자이너: [이미지 레퍼런스 첨부] "통계 섹션을 이렇게 바꿔줘"
+  → Agent가 이미지 분석 → 충돌 부분 질문 → 반영
+디자이너: "와이어프레임 캡쳐해줘"
+  → Puppeteer로 전체 HTML → PNG 자동 캡처
+```
+
+**생성 결과물:**
+
+| CalendarPage | AddRecordPage | RecordDetailPage |
+|:---:|:---:|:---:|
+| ![CalendarPage](wireframes/CalendarPage.png) | ![AddRecordPage](wireframes/AddRecordPage.png) | ![RecordDetailPage](wireframes/RecordDetailPage.png) |
+
+이 Agent 덕분에 디자이너가 설계 문서 기반으로 UI를 빠르게 검증하고, 개발자는 확정된 와이어프레임을 기준으로 구현할 수 있었습니다.
+
 ### 멀티 에이전트 병렬 개발
 
 4명의 팀원이 **각자 Kiro CLI 세션**에서 동시에 작업:
