@@ -1,8 +1,9 @@
 from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.routers import ai_suggest, cycle_rules, treatment_data
 
@@ -13,6 +14,15 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(title="Admin Service", version="0.1.0", lifespan=lifespan)
+
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException) -> JSONResponse:
+    code_map = {400: "BAD_REQUEST", 404: "NOT_FOUND", 409: "CONFLICT", 422: "VALIDATION_ERROR", 502: "BAD_GATEWAY"}
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": {"code": code_map.get(exc.status_code, "INTERNAL_ERROR"), "message": exc.detail}},
+    )
 
 app.add_middleware(
     CORSMiddleware,

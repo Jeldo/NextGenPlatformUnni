@@ -251,9 +251,9 @@ SQS.ReceiveMessage()
 |--------|------|------|
 | POST | /api/cycle-rules | 추천 주기 생성 |
 | GET | /api/cycle-rules | 전체 주기 목록 |
-| GET | /api/cycle-rules/{categoryId} | 카테고리별 주기 조회 |
-| PUT | /api/cycle-rules/{categoryId} | 주기 수정 |
-| DELETE | /api/cycle-rules/{categoryId} | 주기 삭제 |
+| GET | /api/cycle-rules/{treatmentId} | 시술별 주기 조회 |
+| PUT | /api/cycle-rules/{treatmentId} | 주기 수정 |
+| DELETE | /api/cycle-rules/{treatmentId} | 주기 삭제 |
 | POST | /api/categories | 시술 카테고리 생성 |
 | GET | /api/categories | 카테고리 목록 |
 | PUT | /api/categories/{id} | 카테고리 수정 |
@@ -283,7 +283,7 @@ SQS.ReceiveMessage()
 
 | 호출 | 목적 | 실패 시 |
 |------|------|---------|
-| GET /api/cycle-rules/{categoryId} | 예정일 계산용 주기 조회 | graceful skip (예정일 미생성) |
+| GET /api/cycle-rules/{treatmentId} | 예정일 계산용 주기 조회 | graceful skip (예정일 미생성) |
 | GET /api/categories | 드롭다운 데이터 프록시 | 502 반환 |
 | GET /api/categories/{id}/treatments | 드롭다운 데이터 프록시 | 502 반환 |
 | GET /api/treatments/{id}/dosage-types | 드롭다운 데이터 프록시 | 502 반환 |

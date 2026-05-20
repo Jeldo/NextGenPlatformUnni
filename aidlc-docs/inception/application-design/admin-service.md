@@ -57,7 +57,7 @@ class TreatmentResponse(BaseModel):
     name: str
 
 class DosageTypeCreate(BaseModel):
-    unit: str   # "shot", "minute", "volume", "vial", "joule"
+    unit: str   # "shot", "minute", "volume", "vial", "unit", "joule"
 
 class DosageTypeResponse(BaseModel):
     id: str
@@ -171,7 +171,10 @@ class DosageTypeResponse(BaseModel):
 
 ```json
 {
-  "detail": "Category with id 'xxx' not found"
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Category with id 'xxx' not found"
+  }
 }
 ```
 

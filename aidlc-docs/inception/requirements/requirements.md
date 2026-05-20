@@ -94,6 +94,11 @@
 - 카테고리 → 시술명 → 용량 단위 계층 구조
 - 관리자 API로 시술 데이터 CRUD (FR-8과 동일 FastAPI 서비스에서 관리)
 
+### FR-10: AI 시술 정보 자동 제안 (관리자)
+- 시술명 입력 시 AWS Bedrock (Claude Opus)을 활용하여 카테고리, 추천 주기, 용량 단위를 자동 예측
+- 관리자가 예측 결과를 확인 후 수동으로 저장 (자동 저장 아님)
+- Admin Service 내 독립 엔드포인트로 제공 (`POST /api/ai/suggest-treatment`)
+
 ---
 
 ## Non-Functional Requirements
