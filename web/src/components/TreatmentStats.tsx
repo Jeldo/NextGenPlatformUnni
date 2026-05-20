@@ -1,10 +1,10 @@
 "use client";
 
 import { Chip } from "@heroui/react";
-import type { TreatmentStat } from "@/types";
+import type { StatItem } from "@/types";
 
 export interface TreatmentStatsProps {
-  statistics: TreatmentStat[];
+  statistics: StatItem[];
 }
 
 export function TreatmentStats({ statistics }: TreatmentStatsProps) {
@@ -13,8 +13,8 @@ export function TreatmentStats({ statistics }: TreatmentStatsProps) {
   return (
     <div className="flex gap-2 overflow-x-auto py-2" role="list" aria-label="시술 통계">
       {statistics.map((stat) => (
-        <Chip key={stat.category_id} variant="flat" size="sm" role="listitem">
-          {stat.category_name} {stat.count}회
+        <Chip key={stat.treatment_id} variant="flat" size="sm" role="listitem">
+          {stat.treatment_name} {stat.count}회
         </Chip>
       ))}
     </div>

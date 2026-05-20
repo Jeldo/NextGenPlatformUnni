@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Button, Input, Textarea, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
+import { Button, Input, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@heroui/react";
 import { useRecord } from "@/hooks/useRecord";
 import { useUpdateRecord } from "@/hooks/useUpdateRecord";
 import { useDeleteRecord } from "@/hooks/useDeleteRecord";
@@ -11,7 +11,7 @@ export default function RecordDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { data: record, isLoading } = useRecord(id);
-  const updateRecord = useUpdateRecord();
+  const updateRecord = useUpdateRecord(id);
   const deleteRecord = useDeleteRecord();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -19,21 +19,19 @@ export default function RecordDetailPage() {
   const [showMenu, setShowMenu] = useState(false);
   const [editDate, setEditDate] = useState("");
   const [editHospital, setEditHospital] = useState("");
-  const [editMemo, setEditMemo] = useState("");
 
   if (isLoading) return <div className="p-4">Loading...</div>;
   if (!record) return <div className="p-4">기록을 찾을 수 없습니다.</div>;
 
   const startEdit = () => {
     setEditDate(record.treatment_date.slice(0, 10));
-    setEditHospital(record.hospital_name);
-    setEditMemo(record.memo ?? "");
+    setEditHospital(record.hospital_name ?? "");
     setIsEditing(true);
   };
 
   const handleSave = () => {
     updateRecord.mutate(
-      { id, data: { treatment_date: new Date(editDate).toISOString(), hospital_name: editHospital, memo: editMemo || undefined } },
+      { treatment_date: new Date(editDate).toISOString(), hospital_name: editHospital || undefined },
       { onSuccess: () => setIsEditing(false) },
     );
   };
@@ -48,7 +46,7 @@ export default function RecordDetailPage() {
     return `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
   };
 
-  const title = [record.hospital_name, record.dosage_value ? `${record.dosage_value}${record.dosage_type}` : ""].filter(Boolean).join(" ");
+  const title = [record.treatment_name, record.dosage_value ? `${record.dosage_value}${record.dosage_unit ?? ""}` : ""].filter(Boolean).join(" ");
 
   // 수정 모드
   if (isEditing) {
@@ -68,10 +66,6 @@ export default function RecordDetailPage() {
           <div className="flex flex-col gap-1.5">
             <label className="text-[13px] font-semibold text-black">병원명</label>
             <Input value={editHospital} onValueChange={setEditHospital} aria-label="병원명" />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[13px] font-semibold text-black">메모</label>
-            <Textarea value={editMemo} onValueChange={setEditMemo} placeholder="메모를 입력하세요 (선택)" aria-label="메모" />
           </div>
           <Button color="primary" size="lg" className="w-full mt-4 font-semibold" isLoading={updateRecord.isPending} onPress={handleSave}>
             저장
@@ -116,17 +110,11 @@ export default function RecordDetailPage() {
         <div className="px-5">
           <div className="flex items-start gap-3.5 py-3.5 border-b border-black/7">
             <span className="text-lg flex-shrink-0 w-5 text-center">🏥</span>
-            <span className="text-[15px] text-black">{record.hospital_name}</span>
-          </div>
-          <div className="flex items-start gap-3.5 py-3.5 border-b border-black/7">
-            <span className="text-lg flex-shrink-0 w-5 text-center">📅</span>
-            <span className="text-[15px] text-black">{formatDate(record.treatment_date)}</span>
+            <span className="text-[15px] text-black">{record.hospital_name ?? "병원 미입력"}</span>
           </div>
           <div className="flex items-start gap-3.5 py-3.5">
-            <span className="text-lg flex-shrink-0 w-5 text-center">📝</span>
-            <span className={`text-[15px] ${record.memo ? "text-black" : "text-gray-description"}`}>
-              {record.memo || "메모 없음"}
-            </span>
+            <span className="text-lg flex-shrink-0 w-5 text-center">📅</span>
+            <span className="text-[15px] text-black">{formatDate(record.treatment_date)}</span>
           </div>
         </div>
       </div>
