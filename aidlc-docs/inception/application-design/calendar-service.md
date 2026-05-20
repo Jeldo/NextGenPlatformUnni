@@ -413,7 +413,7 @@ const (
 ```
 1. record 생성 → record.Validate()
 2. TreatmentRecordRepository.Save(record)
-3. CycleRuleClient.GetCycleRule(record.CategoryID)
+3. CycleRuleClient.GetCycleRule(record.TreatmentID)
    - 주기 존재 → CalculateScheduleHandler.Handle()
    - 주기 미존재 → 건너뜀 (에러 아님)
 4. 생성된 TreatmentRecord 반환
@@ -429,7 +429,7 @@ const (
 4. TreatmentRecordRepository.Update(record)
 5. record.IsDateOrCategoryChanged(changes) → true면:
    a. ScheduledTreatmentRepository.DeleteByRecordID()
-   b. CycleRuleClient.GetCycleRule(record.CategoryID)
+   b. CycleRuleClient.GetCycleRule(record.TreatmentID)
    c. CalculateScheduleHandler.Handle()
 6. 수정된 Record 반환
 
@@ -570,7 +570,7 @@ func (r *TreatmentRecord) ApplyUpdate(input UpdateRecordInput) []string {
 ```go
 func (r *TreatmentRecord) IsDateOrCategoryChanged(changes []string) bool {
     for _, c := range changes {
-        if c == "treatment_date" || c == "category_id" { return true }
+        if c == "treatment_date" || c == "category_id" || c == "treatment_id" { return true }
     }
     return false
 }

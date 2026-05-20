@@ -54,9 +54,9 @@ DOSAGE_TYPES = {
 }
 
 CYCLE_RULES = [
-    {"category_id": "019234ab-1111-7def-8000-000000000001", "cycle_days": 90, "description": "보톡스 추천 주기", "updated_at": "2026-01-01T00:00:00Z"},
-    {"category_id": "019234ab-1111-7def-8000-000000000002", "cycle_days": 180, "description": "필러 추천 주기", "updated_at": "2026-01-01T00:00:00Z"},
-    {"category_id": "019234ab-1111-7def-8000-000000000003", "cycle_days": 30, "description": "레이저 추천 주기", "updated_at": "2026-01-01T00:00:00Z"},
+    {"treatment_id": "019234ab-2222-7def-8000-000000000001", "cycle_days": 90, "description": "사각턱 보톡스 추천 주기", "updated_at": "2026-01-01T00:00:00Z"},
+    {"treatment_id": "019234ab-2222-7def-8000-000000000004", "cycle_days": 180, "description": "입술 필러 추천 주기", "updated_at": "2026-01-01T00:00:00Z"},
+    {"treatment_id": "019234ab-2222-7def-8000-000000000007", "cycle_days": 30, "description": "리프팅 레이저 추천 주기", "updated_at": "2026-01-01T00:00:00Z"},
 ]
 
 
@@ -79,21 +79,21 @@ def list_cycle_rules():
     return CYCLE_RULES
 
 
-@app.get("/api/cycle-rules/{category_id}")
-def get_cycle_rule(category_id: str):
+@app.get("/api/cycle-rules/{treatment_id}")
+def get_cycle_rule(treatment_id: str):
     for rule in CYCLE_RULES:
-        if rule["category_id"] == category_id:
+        if rule["treatment_id"] == treatment_id:
             return rule
     return CYCLE_RULES[0]
 
 
-@app.put("/api/cycle-rules/{category_id}")
-def update_cycle_rule(category_id: str):
+@app.put("/api/cycle-rules/{treatment_id}")
+def update_cycle_rule(treatment_id: str):
     return CYCLE_RULES[0]
 
 
-@app.delete("/api/cycle-rules/{category_id}", status_code=204)
-def delete_cycle_rule(category_id: str):
+@app.delete("/api/cycle-rules/{treatment_id}", status_code=204)
+def delete_cycle_rule(treatment_id: str):
     return None
 
 

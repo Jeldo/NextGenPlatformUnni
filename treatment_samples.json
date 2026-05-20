@@ -1,0 +1,427 @@
+{
+  "$schema": "skin-procedure-catalog-v1",
+  "description": "피부 시술 카테고리·세부 시술·일반 용량 정보 카탈로그 (참고용)",
+  "disclaimer": "본 데이터의 용량 정보는 일반적으로 통용되는 참고 범위이며, 실제 시술량은 환자 상태와 의료진 판단에 따라 달라질 수 있습니다. 의료 자문이 아닌 정보 제공 목적으로만 사용하세요.",
+  "last_updated": "2026-05-20",
+  "categories": [
+    {
+      "id": "lifting",
+      "name": "리프팅",
+      "description": "처진 피부를 끌어올리고 늘어진 탄력을 회복시키는 시술",
+      "procedures": [
+        {
+          "id": "ulthera",
+          "name": "울쎄라",
+          "type": "HIFU",
+          "target_layer": "SMAS (근막층)",
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "300~600샷",
+            "by_area": {
+              "전안면": "300~450샷",
+              "전안면+목": "500~600샷",
+              "부분(턱선)": "150~200샷"
+            },
+            "depth_mm": [1.5, 3.0, 4.5],
+            "interval_weeks": 48
+          }
+        },
+        {
+          "id": "shurink_universe",
+          "name": "슈링크 유니버스",
+          "type": "HIFU",
+          "target_layer": "SMAS (근막층)",
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "300~700샷",
+            "by_area": {
+              "전안면": "400~600샷",
+              "전안면+목": "600~800샷"
+            },
+            "depth_mm": [1.5, 3.0, 4.5, 13.0],
+            "interval_weeks": 48
+          }
+        },
+        {
+          "id": "thermage_flx",
+          "name": "써마지 FLX",
+          "type": "RF (모노폴라 고주파)",
+          "target_layer": "진피층",
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "600~900샷",
+            "by_area": {
+              "전안면": "600~900샷",
+              "눈가": "200~300샷",
+              "전안면+목": "900~1200샷"
+            },
+            "tip_type": "4.0cm² 팁",
+            "interval_weeks": 96
+          }
+        },
+        {
+          "id": "oligio",
+          "name": "올리지오",
+          "type": "RF (모노폴라 고주파)",
+          "target_layer": "진피층",
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "300~600샷",
+            "by_area": {
+              "전안면": "300~500샷",
+              "전안면+목": "500~700샷"
+            },
+            "interval_weeks": 96
+          }
+        },
+        {
+          "id": "inmode",
+          "name": "인모드",
+          "type": "RF (바이폴라 고주파)",
+          "target_layer": "진피~피하지방층",
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "FORMA 10~15분, FRACTORA 200~400샷",
+            "modes": ["FORMA", "FRACTORA", "MORPHEUS8"],
+            "interval_weeks": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "skinbooster",
+      "name": "스킨부스터",
+      "description": "진피층에 유효 성분을 직접 주입하여 보습·재생을 촉진하는 시술",
+      "procedures": [
+        {
+          "id": "aqua_shine",
+          "name": "물광주사",
+          "ingredient": "히알루론산 (HA)",
+          "dosage": {
+            "unit": "volume",
+            "typical_range": "1~2mL",
+            "by_area": {
+              "전안면": "1~2mL",
+              "목": "1~2mL"
+            },
+            "interval_weeks": 4
+          }
+        },
+        {
+          "id": "rejuran_healer",
+          "name": "리쥬란힐러",
+          "ingredient": "PN (Polynucleotide, 연어 DNA)",
+          "dosage": {
+            "unit": "volume",
+            "typical_range": "2mL/회",
+            "by_area": {
+              "전안면": "2mL",
+              "눈가(아이)": "1mL",
+              "목": "2mL"
+            },
+            "interval_weeks": 4
+          }
+        },
+        {
+          "id": "exosome_face",
+          "name": "전안면 엑소좀",
+          "ingredient": "줄기세포 배양액 유래 엑소좀",
+          "dosage": {
+            "unit": "vial",
+            "typical_range": "1~2 vial",
+            "interval_weeks": 4,
+            "note": "제품별 1바이알 용량 상이 (대표 5mL)"
+          }
+        },
+        {
+          "id": "exosome_scalp",
+          "name": "두피 엑소좀",
+          "ingredient": "줄기세포 배양액 유래 엑소좀",
+          "dosage": {
+            "unit": "vial",
+            "typical_range": "2~3 vial",
+            "interval_weeks": 4,
+            "note": "제품별 1바이알 용량 상이 (대표 5mL)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "laser_pigment",
+      "name": "레이저 (색소/홍조)",
+      "description": "색소 병변 파괴 및 안면홍조 개선 시술",
+      "procedures": [
+        {
+          "id": "picosure",
+          "name": "피코슈어",
+          "type": "Pico Laser",
+          "wavelength_nm": 755,
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "1500~3000샷",
+            "fluence_range": "0.4~3.0 J/cm²",
+            "by_area": {
+              "전안면 토닝": "2000~3000샷",
+              "국소 색소": "300~500샷"
+            },
+            "interval_weeks": 4
+          }
+        },
+        {
+          "id": "revlite",
+          "name": "레블라이트",
+          "type": "Q-switched Nd:YAG Laser",
+          "wavelength_nm": [532, 1064],
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "1500~2500샷",
+            "fluence_range": "1.6~2.4 J/cm² (토닝)",
+            "by_area": {
+              "전안면 토닝": "1500~2500샷"
+            },
+            "interval_weeks": 2
+          }
+        },
+        {
+          "id": "vbeam",
+          "name": "브이빔 (혈관 레이저)",
+          "type": "PDL (Pulsed Dye Laser)",
+          "wavelength_nm": 595,
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "300~800샷",
+            "fluence_range": "7~12 J/cm²",
+            "by_area": {
+              "전안면": "500~800샷",
+              "국소 모세혈관": "100~200샷"
+            },
+            "interval_weeks": 4
+          }
+        },
+        {
+          "id": "excel_v",
+          "name": "엑셀브이",
+          "type": "KTP/Nd:YAG Laser",
+          "wavelength_nm": [532, 1064],
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "300~800샷",
+            "by_area": {
+              "전안면": "500~800샷"
+            },
+            "interval_weeks": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "acne_pore",
+      "name": "여드름·모공",
+      "description": "피지 분비 조절, 여드름 흉터·모공 개선 시술",
+      "procedures": [
+        {
+          "id": "aquapeel",
+          "name": "아쿠아필",
+          "type": "Hydradermabrasion",
+          "dosage": {
+            "unit": "minute",
+            "typical_range": "20~30분",
+            "stages": ["클렌징", "각질 제거", "추출", "보습"],
+            "interval_weeks": 4
+          }
+        },
+        {
+          "id": "fraxel",
+          "name": "프락셀",
+          "type": "Fractional Laser",
+          "wavelength_nm": 1550,
+          "dosage": {
+            "unit": "joule",
+            "typical_range": "20~70 mJ",
+            "by_area": {
+              "전안면": "30~50 mJ, 8~12 pass",
+              "흉터(국소)": "50~70 mJ"
+            },
+            "interval_weeks": 4
+          }
+        },
+        {
+          "id": "potenza",
+          "name": "포텐자",
+          "type": "RF Microneedle",
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "300~600샷",
+            "needle_depth_mm": "0.5~3.5",
+            "by_area": {
+              "전안면(모공)": "400~600샷",
+              "여드름 흉터(국소)": "200~400샷"
+            },
+            "interval_weeks": 4
+          }
+        },
+        {
+          "id": "secret_rf",
+          "name": "시크릿RF",
+          "type": "RF Microneedle",
+          "dosage": {
+            "unit": "shot",
+            "typical_range": "300~500샷",
+            "needle_depth_mm": "0.5~3.5",
+            "interval_weeks": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "botox",
+      "name": "보톡스",
+      "description": "보툴리눔 톡신을 이용해 근육을 축소하거나 표정 주름을 완화하는 시술",
+      "procedures": [
+        {
+          "id": "botox_glabella",
+          "name": "미간 보톡스",
+          "type": "Botulinum Toxin",
+          "ingredient": "Botulinum Toxin Type A",
+          "dosage": {
+            "unit": "unit",
+            "typical_range": "20~25 U",
+            "interval_weeks": 24
+          }
+        },
+        {
+          "id": "botox_forehead",
+          "name": "이마 보톡스",
+          "type": "Botulinum Toxin",
+          "ingredient": "Botulinum Toxin Type A",
+          "dosage": {
+            "unit": "unit",
+            "typical_range": "10~20 U",
+            "interval_weeks": 24
+          }
+        },
+        {
+          "id": "botox_crowsfeet",
+          "name": "눈가 보톡스",
+          "type": "Botulinum Toxin",
+          "ingredient": "Botulinum Toxin Type A",
+          "dosage": {
+            "unit": "unit",
+            "typical_range": "양측 합 12~24 U",
+            "interval_weeks": 24
+          }
+        },
+        {
+          "id": "botox_jaw",
+          "name": "사각턱 보톡스",
+          "type": "Botulinum Toxin",
+          "ingredient": "Botulinum Toxin Type A",
+          "dosage": {
+            "unit": "unit",
+            "typical_range": "양측 합 50~100 U",
+            "interval_weeks": 24
+          }
+        },
+        {
+          "id": "botox_trapezius",
+          "name": "승모근 보톡스",
+          "type": "Botulinum Toxin",
+          "ingredient": "Botulinum Toxin Type A",
+          "dosage": {
+            "unit": "unit",
+            "typical_range": "양측 합 100~200 U",
+            "interval_weeks": 24
+          }
+        },
+        {
+          "id": "contour_injection",
+          "name": "윤곽주사 (지방분해)",
+          "type": "Lipolysis Injection",
+          "ingredient": "PPC/DC 등",
+          "dosage": {
+            "unit": "volume",
+            "typical_range": "5~10 mL",
+            "by_area": {
+              "얼굴(턱밑)": "5~10 mL",
+              "이중턱": "5~8 mL"
+            },
+            "interval_weeks": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "filler",
+      "name": "필러",
+      "description": "꺼진 부위에 볼륨을 채워 입체감을 살리는 주사 시술",
+      "procedures": [
+        {
+          "id": "filler_nasolabial",
+          "name": "팔자주름 필러",
+          "type": "Hyaluronic Acid Filler",
+          "ingredient": "히알루론산 (HA)",
+          "dosage": {
+            "unit": "volume",
+            "typical_range": "1~2 mL",
+            "interval_weeks": 72
+          }
+        },
+        {
+          "id": "filler_lip",
+          "name": "입술 필러",
+          "type": "Hyaluronic Acid Filler",
+          "ingredient": "히알루론산 (HA)",
+          "dosage": {
+            "unit": "volume",
+            "typical_range": "0.5~1 mL",
+            "interval_weeks": 48
+          }
+        },
+        {
+          "id": "filler_cheek",
+          "name": "볼/광대 필러",
+          "type": "Hyaluronic Acid Filler",
+          "ingredient": "히알루론산 (HA)",
+          "dosage": {
+            "unit": "volume",
+            "typical_range": "1~3 mL",
+            "interval_weeks": 72
+          }
+        },
+        {
+          "id": "filler_chin",
+          "name": "턱끝 필러",
+          "type": "Hyaluronic Acid Filler",
+          "ingredient": "히알루론산 (HA)",
+          "dosage": {
+            "unit": "volume",
+            "typical_range": "1~2 mL",
+            "interval_weeks": 72
+          }
+        },
+        {
+          "id": "filler_forehead",
+          "name": "이마 필러",
+          "type": "Hyaluronic Acid Filler",
+          "ingredient": "히알루론산 (HA)",
+          "dosage": {
+            "unit": "volume",
+            "typical_range": "2~4 mL",
+            "interval_weeks": 72
+          }
+        },
+        {
+          "id": "filler_undereye",
+          "name": "눈밑(애교/다크서클) 필러",
+          "type": "Hyaluronic Acid Filler",
+          "ingredient": "히알루론산 (HA)",
+          "dosage": {
+            "unit": "volume",
+            "typical_range": "0.5~1 mL",
+            "interval_weeks": 48
+          }
+        }
+      ]
+    }
+  ]
+}

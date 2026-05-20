@@ -31,12 +31,12 @@ Router (FastAPI)
 ```python
 # Pydantic Schemas (API)
 class CycleRuleCreate(BaseModel):
-    category_id: str
+    treatment_id: str
     cycle_days: int  # > 0
     description: str | None = None
 
 class CycleRuleResponse(BaseModel):
-    category_id: str
+    treatment_id: str
     cycle_days: int
     description: str | None
     updated_at: datetime
@@ -75,9 +75,9 @@ class DosageTypeResponse(BaseModel):
 |--------|------|------|------|
 | POST | /api/cycle-rules | 추천 주기 생성 | 201 |
 | GET | /api/cycle-rules | 전체 주기 목록 | 200 |
-| GET | /api/cycle-rules/{categoryId} | 카테고리별 주기 조회 | 200 |
-| PUT | /api/cycle-rules/{categoryId} | 주기 수정 | 200 |
-| DELETE | /api/cycle-rules/{categoryId} | 주기 삭제 | 204 |
+| GET | /api/cycle-rules/{treatmentId} | 시술별 주기 조회 | 200 |
+| PUT | /api/cycle-rules/{treatmentId} | 주기 수정 | 200 |
+| DELETE | /api/cycle-rules/{treatmentId} | 주기 삭제 | 204 |
 
 ### Treatment Data (시술 마스터 데이터)
 
@@ -103,18 +103,18 @@ class DosageTypeResponse(BaseModel):
 
 ```
 1. 입력 검증 (cycle_days > 0)
-2. category_id로 카테고리 존재 확인
+2. treatment_id로 시술 존재 확인
 3. 기존 규칙 존재 확인 → 존재 시 409 Conflict
 4. DB 저장
 5. CycleRuleResponse 반환
 
-에러: category 미존재→404, 이미 존재→409, cycle_days<=0→422
+에러: treatment 미존재→404, 이미 존재→409, cycle_days<=0→422
 ```
 
 ### CycleRuleService.update_cycle_rule
 
 ```
-1. category_id로 기존 규칙 조회
+1. treatment_id로 기존 규칙 조회
 2. 미존재 시 404
 3. 필드 업데이트 → DB 저장
 4. CycleRuleResponse 반환
@@ -123,7 +123,7 @@ class DosageTypeResponse(BaseModel):
 ### CycleRuleService.delete_cycle_rule
 
 ```
-1. category_id로 기존 규칙 조회
+1. treatment_id로 기존 규칙 조회
 2. 미존재 시 404
 3. DB 삭제
 4. 기존에 계산된 예정일에는 영향 없음 (이미 저장된 것은 유지)
@@ -190,5 +190,5 @@ class DosageTypeResponse(BaseModel):
 ## Calendar Service와의 관계
 
 - Calendar Service가 이 서비스의 API를 호출하여 주기/시술 데이터 조회
-- 호출 경로: `GET /api/cycle-rules/{categoryId}`, `GET /api/categories`, etc.
+- 호출 경로: `GET /api/cycle-rules/{treatmentId}`, `GET /api/categories`, etc.
 - 이 서비스가 다운되면: Calendar Service는 예정일 미생성 (graceful degradation)
