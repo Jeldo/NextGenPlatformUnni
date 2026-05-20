@@ -365,3 +365,11 @@
 **User Input**: "aidlc 로 작업하는거 알고있지?" → "지금 보충하자"
 **AI Response**: aidlc-state.md 업데이트 (Unit 3-A 진행 상태 반영), audit.md에 전체 작업 로그 추가.
 **Context**: CONSTRUCTION - AIDLC 문서 정합성 보충.
+
+---
+
+## Construction - Unit 3-A 와이어프레임 디자인 정합성 반영
+**Timestamp**: 2026-05-20T16:13:48+09:00
+**User Input**: "wireframes/ 하위의 스크린샷을 확인하고 디자인의 정합성이 맞는지 체크해줘. 그리고 지금 내가 확인해봤을 때 디자인이 이렇게 정리되어있지 않거든? 참고해서 꼼꼼하게 수정해줘. ui 디자이너 관점에서"
+**AI Response**: 와이어프레임 3장(CalendarPage, AddRecordPage, RecordDetailPage) 대비 현재 구현 차이점 분석 후 전면 수정. CalendarPage('나의 시술' 섹션 추가), WeeklyCalendarGrid(확정=검정, 예정=점선, 범례, 오늘=주황원), RecordDetailPage(헤더+아이콘행+하단고정+삭제모달), AddRecordPage(헤더+섹션라벨+그룹핑). 37개 테스트 유지, 브라우저 검증 완료.
+**Context**: CONSTRUCTION - Unit 3-A 디자인 정합성 수정 완료.
