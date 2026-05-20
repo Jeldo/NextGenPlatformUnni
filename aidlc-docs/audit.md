@@ -441,3 +441,51 @@
 **Context**: CONSTRUCTION - Unit 3-C. AWS AI 서비스 활용 (기술 활용도 개선).
 
 ---
+
+---
+
+## Construction - Unit 3-A Phase 6 (Playwright E2E) 완료
+**Timestamp**: 2026-05-20T16:18:00+09:00
+**User Input**: "오케이 다음 고고. 그리고 시술추가 섹션의 ui 가 깨지거든? 이런것들도 확인하면서 수정해줘. 마지막 e2e 하면서 동작안하는거있으면 계속 수정하면서 진행해줘."
+**AI Response**: Playwright E2E 11개 테스트 작성 및 통과. TreatmentDropdown label 제거 + border 추가로 UI 깨짐 수정. 총 35 단위 + 11 E2E = 46개 테스트 통과.
+**Context**: CONSTRUCTION - Unit 3-A Phase 6 완료.
+
+---
+
+## Construction - Unit 3-A 와이어프레임 스타일 2차 수정
+**Timestamp**: 2026-05-20T16:21:24+09:00
+**User Input**: "홈의 플로팅 버튼도 '+' 도 가운데에 있지 않아."
+**AI Response**: FloatingAddButton + 아이콘 중앙 정렬 수정 (min-w-0, flex items-center justify-center).
+**Context**: CONSTRUCTION - FAB 스타일 수정.
+
+---
+
+## Construction - Unit 3-A DateBottomSheet 와이어프레임 정합성
+**Timestamp**: 2026-05-20T16:22:00+09:00
+**User Input**: "홈에서 바텀시트 떴을 때 ui 캡쳐한 wireframe 도 넣어서 이 이미지도 참고해줘"
+**AI Response**: DateBottomSheet 재구현 (날짜+요일, ✕닫기, 주황 점선 추가 버튼). RecordCard/ScheduleCard를 HeroUI Card에서 순수 button으로 경량화. 와이어프레임과 동일한 카드 스타일 (확정 뱃지, 예정—탭하여 확인).
+**Context**: CONSTRUCTION - DateBottomSheet/RecordCard/ScheduleCard 와이어프레임 정합성.
+
+---
+
+## Construction - Unit 3-A AddRecordPage 전면 재구현
+**Timestamp**: 2026-05-20T16:24:00+09:00
+**User Input**: "시술추가페이지가 AddRecordPage.png 와 일치하지 않고 스타일이 다 달라. hydration error 가 발생하는 걸로 보여 이 부분도 수정해줘"
+**AI Response**: HeroUI Select/Input 전면 제거 → 순수 HTML select/input으로 교체. 와이어프레임과 동일한 border box 스타일. 저장 버튼 하단 고정. Hydration error 완전 해결 (콘솔 에러 0개).
+**Context**: CONSTRUCTION - AddRecordPage hydration error 해결 + 와이어프레임 정합성.
+
+---
+
+## Construction - Unit 3-A 세부 스타일 최종 정합성
+**Timestamp**: 2026-05-20T16:30:00+09:00
+**User Input**: "wireframes 계속 확인하면서 기존 ui 와 다른점이 있는지 계속 무한 비교하도록 해"
+**AI Response**: CalendarPage 주간 캘린더 라운드 박스 배경, 요일 밑줄 제거, AddRecordPage select 주황 ▼ chevron 추가, RecordDetailPage 하단 버튼 순수 HTML 통일. 모든 페이지 와이어프레임 정합성 확인 완료.
+**Context**: CONSTRUCTION - 최종 스타일 정합성 완료.
+
+---
+
+## Construction - Unit 3-A 백엔드 인터페이스 최종 검증
+**Timestamp**: 2026-05-20T16:32:00+09:00
+**User Input**: "백엔드 연결잘되어있고 인터페이스 수정없는지 마지막으로 확인 고고"
+**AI Response**: 모든 API 엔드포인트 정상 응답 확인. types/index.ts와 실제 API 응답 필드 6개 타입 모두 100% 일치. 인터페이스 변경 없음.
+**Context**: CONSTRUCTION - Unit 3-A 백엔드 인터페이스 정합성 최종 확인. Unit 3-A 완료.

@@ -47,7 +47,7 @@
 - [x] Code Generation - Phase 3 (WeeklyCalendarGrid, DateBottomSheet, CalendarPage)
 - [x] Code Generation - Phase 4 (ScheduleConfirmModal, RecordDetailPage 수정/삭제)
 - [x] Code Generation - Phase 5 (GoogleCalendarButton, Error Handling)
-- [ ] Code Generation - Phase 6 (Playwright E2E 테스트)
+- [x] Code Generation - Phase 6 (Playwright E2E 테스트)
 
 #### Unit 3-B: Backend (Go Calendar Service)
 - [x] Functional Design
