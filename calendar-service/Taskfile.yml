@@ -1,0 +1,44 @@
+version: '3'
+
+vars:
+  MODULE: github.com/NextGenPlatformUnni/calendar-service
+
+tasks:
+  test:
+    desc: Run all tests
+    cmds:
+      - go test ./... -v -race -count=1
+
+  test:unit:
+    desc: Run unit tests only (exclude integration)
+    cmds:
+      - go test ./internal/domain/... ./internal/application/... -v -race -count=1
+
+  test:integration:
+    desc: Run integration tests (requires DB)
+    cmds:
+      - go test ./internal/infrastructure/... -v -race -count=1 -tags=integration
+
+  lint:
+    desc: Run linter
+    cmds:
+      - go vet ./...
+      - test -z "$(gofmt -l .)"
+
+  build:
+    desc: Build all binaries
+    cmds:
+      - go build -o bin/api ./cmd/api
+      - go build -o bin/consumer ./cmd/consumer
+      - go build -o bin/cron ./cmd/cron
+
+  run:
+    desc: Run the API server
+    cmds:
+      - go run ./cmd/api
+
+  migrate:
+    desc: Run database migrations
+    cmds:
+      - echo "Run migrations with migrate tool"
+      - migrate -path migrations -database "${DATABASE_URL}" up

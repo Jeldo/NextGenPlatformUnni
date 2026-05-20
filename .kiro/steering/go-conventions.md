@@ -97,6 +97,12 @@ func NewCreateRecordHandler(
 
 - Command: 상태 변경 (Create, Update, Delete)
 - Query: 읽기 전용 (List, Get)
+- **네이밍 규칙**:
+  - Command struct: `XxxCommand` (예: `CreateRecordCommand`)
+  - Command handler: `XxxCommandHandler` (예: `CreateRecordCommandHandler`)
+  - Query struct: `XxxQuery` (예: `ListRecordsQuery`)
+  - Query handler: `XxxQueryHandler` (예: `ListRecordsQueryHandler`)
+- Handle 메서드는 항상 Command/Query struct를 받음 (primitive 파라미터 금지)
 - Handler는 하나의 Command/Query만 처리
 - Handler 간 직접 호출 허용 (같은 레이어)
 

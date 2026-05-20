@@ -103,10 +103,10 @@ Unit 3: 병렬 개발
 #### 포함 작업:
 - [ ] Domain Layer: TreatmentRecord, ScheduledTreatment (Rich Model + Validate, ApplyUpdate 등)
 - [ ] Domain Layer: CycleCalculator (+ PBT 테스트)
-- [ ] Application Layer: CreateRecordHandler, UpdateRecordHandler, DeleteRecordHandler
-- [ ] Application Layer: HandleReservationFixedHandler (멱등성)
-- [ ] Application Layer: CalculateScheduleHandler, CompleteScheduleHandler, DeleteScheduleHandler
-- [ ] Application Layer: ProcessRemindersHandler (예약 유무 분기)
+- [ ] Application Layer: CreateRecordCommandHandler, UpdateRecordCommandHandler, DeleteRecordCommandHandler
+- [ ] Application Layer: HandleReservationFixedCommandHandler (멱등성)
+- [ ] Application Layer: CalculateScheduleCommandHandler, CompleteScheduleCommandHandler, DeleteScheduleCommandHandler
+- [ ] Application Layer: ProcessRemindersCommandHandler (예약 유무 분기)
 - [ ] Application Layer: Query Handlers (List/Get Records, Schedules, Statistics)
 - [ ] Infrastructure Layer: PostgreSQL Repositories
 - [ ] Infrastructure Layer: HTTPCycleRuleClient (Admin API 호출 + Circuit Breaker)

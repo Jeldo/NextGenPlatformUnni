@@ -290,8 +290,6 @@
 
 ---
 
----
-
 ## Construction - Unit 3-A (Frontend) Code Generation Start
 **Timestamp**: 2026-05-20T15:36:14+09:00
 **User Input**: "나는 프론트엔드 개발자고, 지금 construction 단계에서 unit2 까지 완료된 것을 알아. 이제 unit3 를 시작하려고 하는데 시작할 수 있는 상태인지 확인 꼼꼼하게 해줘. 그리고 추가로 npm 이 아니라 우리는 pnpm 을 사용할거야"
@@ -334,6 +332,14 @@
 **Timestamp**: 2026-05-20T15:55:20+09:00
 **AI Response**: WeeklyCalendarGrid, DateBottomSheet 구현. CalendarPage를 새 컴포넌트로 재구성. 10개 단위 테스트 추가. 총 32개 테스트 통과. 브라우저에서 주간 캘린더 + 날짜 바텀시트 정상 동작 확인.
 **Context**: CONSTRUCTION - Unit 3-A Phase 3 (메인 화면) 완료.
+
+---
+
+## Construction - Unit 3-B Functional Design Approved
+**Timestamp**: 2026-05-20T15:58:57+09:00
+**User Input**: "approve & continue"
+**AI Response**: Proceeding to Code Generation for Unit 3-B.
+**Context**: CONSTRUCTION - Unit 3-B Code Generation start.
 
 ---
 

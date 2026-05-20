@@ -1,215 +1,110 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
+	"context"
+	"log/slog"
 	"net/http"
 	"os"
-	"strings"
+	"os/signal"
+	"syscall"
+	"time"
+
+	"github.com/NextGenPlatformUnni/calendar-service/config"
+	"github.com/NextGenPlatformUnni/calendar-service/internal/application/command"
+	"github.com/NextGenPlatformUnni/calendar-service/internal/application/query"
+	"github.com/NextGenPlatformUnni/calendar-service/internal/domain/service"
+	infrahttp "github.com/NextGenPlatformUnni/calendar-service/internal/infrastructure/http"
+	"github.com/NextGenPlatformUnni/calendar-service/internal/infrastructure/postgres"
+	"github.com/NextGenPlatformUnni/calendar-service/internal/presentation/handler"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
+	cfg := config.Load()
 
-	mux := http.NewServeMux()
+	// DB
+	pool, err := pgxpool.New(context.Background(), cfg.DatabaseURL)
+	if err != nil {
+		slog.Error("failed to connect to database", "error", err)
+		os.Exit(1)
+	}
+	defer pool.Close()
+
+	// Infrastructure
+	recordRepo := postgres.NewRecordRepository(pool)
+	scheduleRepo := postgres.NewScheduleRepository(pool)
+	cycleClient := infrahttp.NewCycleRuleClient(cfg.AdminAPIURL, 3*time.Second)
+	notifyClient := infrahttp.NewMockNotificationClient()
+
+	// Domain
+	calculator := service.NewCycleCalculator()
+
+	// Commands
+	calcScheduleHandler := command.NewCalculateScheduleCommandHandler(scheduleRepo, cycleClient, calculator)
+	createRecordHandler := command.NewCreateRecordCommandHandler(recordRepo, calcScheduleHandler)
+	updateRecordHandler := command.NewUpdateRecordCommandHandler(recordRepo, scheduleRepo, calcScheduleHandler)
+	deleteRecordHandler := command.NewDeleteRecordCommandHandler(recordRepo, scheduleRepo)
+	reservationHandler := command.NewHandleReservationFixedCommandHandler(recordRepo, calcScheduleHandler)
+	completeScheduleHandler := command.NewCompleteScheduleCommandHandler(scheduleRepo)
+	deleteScheduleHandler := command.NewDeleteScheduleCommandHandler(scheduleRepo)
+	_ = command.NewProcessRemindersCommandHandler(scheduleRepo, recordRepo, notifyClient)
+
+	// Queries
+	listRecordsHandler := query.NewListRecordsQueryHandler(recordRepo)
+	getRecordHandler := query.NewGetRecordQueryHandler(recordRepo)
+	listSchedulesHandler := query.NewListSchedulesQueryHandler(scheduleRepo)
+	getScheduleHandler := query.NewGetScheduleQueryHandler(scheduleRepo)
+	getStatsHandler := query.NewGetStatisticsQueryHandler(recordRepo)
+
+	// Echo
+	e := echo.New()
+	e.HideBanner = true
+	e.Use(middleware.Recover())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete},
+	}))
 
 	// Health
-	mux.HandleFunc("GET /health", healthHandler)
+	e.GET("/health", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]string{"status": "ok", "service": "calendar-service"})
+	})
 
-	// Records
-	mux.HandleFunc("POST /api/records", createRecordHandler)
-	mux.HandleFunc("GET /api/records", listRecordsHandler)
-	mux.HandleFunc("GET /api/records/{id}", getRecordHandler)
-	mux.HandleFunc("PUT /api/records/{id}", updateRecordHandler)
-	mux.HandleFunc("DELETE /api/records/{id}", deleteRecordHandler)
+	// Routes
+	api := e.Group("/api")
 
-	// Schedules
-	mux.HandleFunc("GET /api/schedules", listSchedulesHandler)
-	mux.HandleFunc("GET /api/schedules/{id}", getScheduleHandler)
-	mux.HandleFunc("PATCH /api/schedules/{id}/complete", completeScheduleHandler)
-	mux.HandleFunc("DELETE /api/schedules/{id}", deleteScheduleHandler)
+	recordHandler := handler.NewRecordHandler(createRecordHandler, updateRecordHandler, deleteRecordHandler, listRecordsHandler, getRecordHandler)
+	recordHandler.Register(api.Group("/records"))
 
-	// Statistics
-	mux.HandleFunc("GET /api/statistics", getStatisticsHandler)
+	scheduleHandler := handler.NewScheduleHandler(completeScheduleHandler, deleteScheduleHandler, listSchedulesHandler, getScheduleHandler)
+	scheduleHandler.Register(api.Group("/schedules"))
 
-	// Treatment Data (proxy)
-	mux.HandleFunc("GET /api/treatment-data/categories", listCategoriesHandler)
-	mux.HandleFunc("GET /api/treatment-data/categories/{id}/treatments", listTreatmentsHandler)
-	mux.HandleFunc("GET /api/treatment-data/treatments/{id}/dosage-types", listDosageTypesHandler)
+	statsHandler := handler.NewStatisticsHandler(getStatsHandler)
+	statsHandler.Register(api.Group("/statistics"))
 
-	// Mock
-	mux.HandleFunc("POST /mock/events/reservation-fixed", mockEventHandler)
+	treatmentDataHandler := handler.NewTreatmentDataHandler(cfg.AdminAPIURL)
+	treatmentDataHandler.Register(api.Group("/treatment-data"))
 
-	log.Printf("Calendar API starting on :%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, corsMiddleware(mux)))
-}
+	mockHandler := handler.NewMockHandler(reservationHandler)
+	mockHandler.Register(api.Group("/mock"))
 
-func corsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusNoContent)
-			return
+	// Graceful shutdown
+	go func() {
+		if err := e.Start(":" + cfg.Port); err != nil && err != http.ErrServerClosed {
+			slog.Error("server error", "error", err)
+			os.Exit(1)
 		}
-		next.ServeHTTP(w, r)
-	})
-}
+	}()
 
-func writeJSON(w http.ResponseWriter, status int, v any) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(v)
-}
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
 
-func healthHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, map[string]string{"status": "ok", "service": "calendar-service", "version": "0.1.0"})
-}
-
-// --- Dummy Data ---
-
-var dummyRecords = []map[string]any{
-	{
-		"id": "019234ab-5678-7def-8000-000000000001", "user_id": "019234ab-0000-7def-8000-000000000001",
-		"source": "AUTO", "category_id": "019234ab-1111-7def-8000-000000000001",
-		"treatment_id": "019234ab-2222-7def-8000-000000000001",
-		"dosage_type": "volume", "dosage_value": "10.0",
-		"treatment_date": "2026-01-15T00:00:00Z", "hospital_name": "강남언니의원",
-		"hospital_location": "서울 강남구", "doctor_name": nil, "memo": nil,
-		"created_at": "2026-01-15T09:00:00Z", "updated_at": "2026-01-15T09:00:00Z",
-	},
-	{
-		"id": "019234ab-5678-7def-8000-000000000002", "user_id": "019234ab-0000-7def-8000-000000000001",
-		"source": "MANUAL", "category_id": "019234ab-1111-7def-8000-000000000002",
-		"treatment_id": "019234ab-2222-7def-8000-000000000004",
-		"dosage_type": "volume", "dosage_value": "1.0",
-		"treatment_date": "2026-01-20T00:00:00Z", "hospital_name": "청담피부과",
-		"hospital_location": "서울 강남구", "doctor_name": "박의사", "memo": "입술 필러",
-		"created_at": "2026-01-20T10:00:00Z", "updated_at": "2026-01-20T10:00:00Z",
-	},
-	{
-		"id": "019234ab-5678-7def-8000-000000000003", "user_id": "019234ab-0000-7def-8000-000000000001",
-		"source": "AUTO", "category_id": "019234ab-1111-7def-8000-000000000003",
-		"treatment_id": "019234ab-2222-7def-8000-000000000007",
-		"dosage_type": "joule", "dosage_value": "15.0",
-		"treatment_date": "2026-02-01T00:00:00Z", "hospital_name": "강남언니의원",
-		"hospital_location": nil, "doctor_name": nil, "memo": nil,
-		"created_at": "2026-02-01T09:00:00Z", "updated_at": "2026-02-01T09:00:00Z",
-	},
-}
-
-var dummySchedules = []map[string]any{
-	{
-		"id": "019234ab-9999-7def-8000-000000000001", "record_id": "019234ab-5678-7def-8000-000000000001",
-		"category_id": "019234ab-1111-7def-8000-000000000001", "treatment_id": "019234ab-2222-7def-8000-000000000001",
-		"scheduled_date": "2026-04-15T00:00:00Z", "cycle_days": 90, "status": "PENDING",
-	},
-	{
-		"id": "019234ab-9999-7def-8000-000000000002", "record_id": "019234ab-5678-7def-8000-000000000002",
-		"category_id": "019234ab-1111-7def-8000-000000000002", "treatment_id": "019234ab-2222-7def-8000-000000000004",
-		"scheduled_date": "2026-07-20T00:00:00Z", "cycle_days": 180, "status": "PENDING",
-	},
-}
-
-var dummyCategories = []map[string]any{
-	{"id": "019234ab-1111-7def-8000-000000000001", "name": "보톡스"},
-	{"id": "019234ab-1111-7def-8000-000000000002", "name": "필러"},
-	{"id": "019234ab-1111-7def-8000-000000000003", "name": "레이저"},
-}
-
-var dummyTreatments = map[string][]map[string]any{
-	"019234ab-1111-7def-8000-000000000001": {
-		{"id": "019234ab-2222-7def-8000-000000000001", "category_id": "019234ab-1111-7def-8000-000000000001", "name": "사각턱"},
-		{"id": "019234ab-2222-7def-8000-000000000002", "category_id": "019234ab-1111-7def-8000-000000000001", "name": "이마"},
-		{"id": "019234ab-2222-7def-8000-000000000003", "category_id": "019234ab-1111-7def-8000-000000000001", "name": "스킨 보톡스"},
-	},
-	"019234ab-1111-7def-8000-000000000002": {
-		{"id": "019234ab-2222-7def-8000-000000000004", "category_id": "019234ab-1111-7def-8000-000000000002", "name": "입술"},
-		{"id": "019234ab-2222-7def-8000-000000000005", "category_id": "019234ab-1111-7def-8000-000000000002", "name": "팔자주름"},
-		{"id": "019234ab-2222-7def-8000-000000000006", "category_id": "019234ab-1111-7def-8000-000000000002", "name": "볼"},
-	},
-	"019234ab-1111-7def-8000-000000000003": {
-		{"id": "019234ab-2222-7def-8000-000000000007", "category_id": "019234ab-1111-7def-8000-000000000003", "name": "리프팅"},
-		{"id": "019234ab-2222-7def-8000-000000000008", "category_id": "019234ab-1111-7def-8000-000000000003", "name": "토닝"},
-		{"id": "019234ab-2222-7def-8000-000000000009", "category_id": "019234ab-1111-7def-8000-000000000003", "name": "제모"},
-	},
-}
-
-var dummyDosageTypes = []map[string]any{
-	{"id": "019234ab-3333-7def-8000-000000000001", "treatment_id": "019234ab-2222-7def-8000-000000000001", "unit": "shot"},
-	{"id": "019234ab-3333-7def-8000-000000000002", "treatment_id": "019234ab-2222-7def-8000-000000000001", "unit": "volume"},
-}
-
-// --- Handlers ---
-
-func createRecordHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 201, dummyRecords[0])
-}
-
-func listRecordsHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, dummyRecords)
-}
-
-func getRecordHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, dummyRecords[0])
-}
-
-func updateRecordHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, dummyRecords[0])
-}
-
-func deleteRecordHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(204)
-}
-
-func listSchedulesHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, dummySchedules)
-}
-
-func getScheduleHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, dummySchedules[0])
-}
-
-func completeScheduleHandler(w http.ResponseWriter, r *http.Request) {
-	completed := dummySchedules[0]
-	completed["status"] = "COMPLETED"
-	writeJSON(w, 200, completed)
-}
-
-func deleteScheduleHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(204)
-}
-
-func getStatisticsHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, []map[string]any{
-		{"category_id": "019234ab-1111-7def-8000-000000000001", "category_name": "보톡스", "count": 3},
-		{"category_id": "019234ab-1111-7def-8000-000000000002", "category_name": "필러", "count": 2},
-		{"category_id": "019234ab-1111-7def-8000-000000000003", "category_name": "레이저", "count": 1},
-	})
-}
-
-func listCategoriesHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, dummyCategories)
-}
-
-func listTreatmentsHandler(w http.ResponseWriter, r *http.Request) {
-	id := r.PathValue("id")
-	treatments, ok := dummyTreatments[id]
-	if !ok {
-		treatments = []map[string]any{}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		slog.Error("shutdown error", "error", err)
 	}
-	writeJSON(w, 200, treatments)
-}
-
-func listDosageTypesHandler(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, 200, dummyDosageTypes)
-}
-
-func mockEventHandler(w http.ResponseWriter, r *http.Request) {
-	_ = strings.NewReader("")
-	writeJSON(w, 202, map[string]string{"message": "event received"})
 }

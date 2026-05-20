@@ -65,24 +65,24 @@
 
 | Command | Handler | 책임 |
 |---------|---------|------|
-| **CreateRecordCommand** | CreateRecordHandler | 시술 기록 생성 → 주기 조회 → 예정일 계산 |
-| **UpdateRecordCommand** | UpdateRecordHandler | 시술 기록 수정 → 예정일 재계산 |
-| **DeleteRecordCommand** | DeleteRecordHandler | 시술 기록 삭제 → 예정일 삭제 |
-| **HandleReservationFixedCommand** | HandleReservationFixedHandler | 예약 확정 이벤트 → 자동 기입 |
-| **CalculateScheduleCommand** | CalculateScheduleHandler | 예정일 계산/저장 |
-| **CompleteScheduleCommand** | CompleteScheduleHandler | 예정일 완료 처리 (PENDING/REMINDED → COMPLETED) |
-| **DeleteScheduleCommand** | DeleteScheduleHandler | 예정일 삭제 |
-| **ProcessRemindersCommand** | ProcessRemindersHandler | 리마인드 배치 처리 |
+| **CreateRecordCommand** | CreateRecordCommandHandler | 시술 기록 생성 → 주기 조회 → 예정일 계산 |
+| **UpdateRecordCommand** | UpdateRecordCommandHandler | 시술 기록 수정 → 예정일 재계산 |
+| **DeleteRecordCommand** | DeleteRecordCommandHandler | 시술 기록 삭제 → 예정일 삭제 |
+| **HandleReservationFixedCommand** | HandleReservationFixedCommandHandler | 예약 확정 이벤트 → 자동 기입 |
+| **CalculateScheduleCommand** | CalculateScheduleCommandHandler | 예정일 계산/저장 |
+| **CompleteScheduleCommand** | CompleteScheduleCommandHandler | 예정일 완료 처리 (PENDING/REMINDED → COMPLETED) |
+| **DeleteScheduleCommand** | DeleteScheduleCommandHandler | 예정일 삭제 |
+| **ProcessRemindersCommand** | ProcessRemindersCommandHandler | 리마인드 배치 처리 |
 
 #### Queries (Read)
 
 | Query | Handler | 책임 |
 |-------|---------|------|
-| **ListRecordsQuery** | ListRecordsHandler | 기간별 시술 기록 목록 조회 |
-| **GetRecordQuery** | GetRecordHandler | 시술 기록 단건 조회 |
-| **ListSchedulesQuery** | ListSchedulesHandler | 예정일 목록 조회 |
-| **GetScheduleQuery** | GetScheduleHandler | 예정일 단건 조회 |
-| **GetStatisticsQuery** | GetStatisticsHandler | 시술 통계 집계 조회 |
+| **ListRecordsQuery** | ListRecordsQueryHandler | 기간별 시술 기록 목록 조회 |
+| **GetRecordQuery** | GetRecordQueryHandler | 시술 기록 단건 조회 |
+| **ListSchedulesQuery** | ListSchedulesQueryHandler | 예정일 목록 조회 |
+| **GetScheduleQuery** | GetScheduleQueryHandler | 예정일 단건 조회 |
+| **GetStatisticsQuery** | GetStatisticsQueryHandler | 시술 통계 집계 조회 |
 
 ### 3. Domain Layer (Rich Domain Models & Domain Services)
 
@@ -393,7 +393,7 @@ const (
 ```
 1. HTTP 요청 파싱 (JSON → CreateRecordCommand)
 2. 입력값 기본 검증 (필수 필드 존재 여부)
-3. CreateRecordHandler.Handle(ctx, cmd) 호출
+3. CreateRecordCommandHandler.Handle(ctx, cmd) 호출
 4. 성공 → 201 + JSON 응답
 5. 에러 → ErrorCode에 따라 HTTP Status 매핑
 ```
@@ -402,26 +402,26 @@ const (
 ```
 1. SQS ReceiveMessage (long poll 20s)
 2. 메시지 파싱 → HandleReservationFixedCommand
-3. HandleReservationFixedHandler.Handle(ctx, cmd) 호출
+3. HandleReservationFixedCommandHandler.Handle(ctx, cmd) 호출
 4. 성공 → DeleteMessage (ACK)
 5. 실패 → visibility timeout 후 재시도, 3회 초과 시 DLQ
 ```
 
 ### Application Layer (CQRS Handlers)
 
-#### CreateRecordHandler.Handle(cmd CreateRecordCommand)
+#### CreateRecordCommandHandler.Handle(cmd CreateRecordCommand)
 ```
 1. record 생성 → record.Validate()
 2. TreatmentRecordRepository.Save(record)
 3. CycleRuleClient.GetCycleRule(record.TreatmentID)
-   - 주기 존재 → CalculateScheduleHandler.Handle()
+   - 주기 존재 → CalculateScheduleCommandHandler.Handle()
    - 주기 미존재 → 건너뜀 (에러 아님)
 4. 생성된 TreatmentRecord 반환
 
 에러: 검증실패→ErrValidation, DB실패→ErrDatabase, CycleRule실패→graceful skip
 ```
 
-#### UpdateRecordHandler.Handle(cmd UpdateRecordCommand)
+#### UpdateRecordCommandHandler.Handle(cmd UpdateRecordCommand)
 ```
 1. TreatmentRecordRepository.FindByID(recordID)
 2. record.IsOwnedBy(requestUserID) → false면 ErrUnauthorized
@@ -430,13 +430,13 @@ const (
 5. record.IsDateOrCategoryChanged(changes) → true면:
    a. ScheduledTreatmentRepository.DeleteByRecordID()
    b. CycleRuleClient.GetCycleRule(record.TreatmentID)
-   c. CalculateScheduleHandler.Handle()
+   c. CalculateScheduleCommandHandler.Handle()
 6. 수정된 Record 반환
 
 에러: 미존재→ErrNotFound, 소유권→ErrUnauthorized, CycleRule실패→기존 예정일 유지
 ```
 
-#### DeleteRecordHandler.Handle(cmd DeleteRecordCommand)
+#### DeleteRecordCommandHandler.Handle(cmd DeleteRecordCommand)
 ```
 1. record := FindByID → record.IsOwnedBy() 검증
 2. ScheduledTreatmentRepository.DeleteByRecordID() (실패 시 로그 후 계속)
@@ -445,17 +445,17 @@ const (
 에러: 미존재→ErrNotFound, 소유권→ErrUnauthorized
 ```
 
-#### HandleReservationFixedHandler.Handle(cmd HandleReservationFixedCommand)
+#### HandleReservationFixedCommandHandler.Handle(cmd HandleReservationFixedCommand)
 ```
 1. cmd.Event.IsSurgery() → true면 무시 (로그)
 2. 멱등성 체크 (reservationID로 기존 기록 조회)
 3. CreateRecordCommand 구성 (Source=AUTO)
-4. CreateRecordHandler.Handle() 호출
+4. CreateRecordCommandHandler.Handle() 호출
 
 에러: 중복→스킵(성공), Create실패→ErrDatabase
 ```
 
-#### CalculateScheduleHandler.Handle(cmd CalculateScheduleCommand)
+#### CalculateScheduleCommandHandler.Handle(cmd CalculateScheduleCommand)
 ```
 1. scheduledDate := CycleCalculator.Calculate(treatmentDate, cycleDays)
 2. schedule := ScheduledTreatment{Status: StatusPending, ScheduledDate: scheduledDate, ...}
@@ -464,7 +464,7 @@ const (
 에러: DB실패→ErrDatabase
 ```
 
-#### CompleteScheduleHandler.Handle(cmd CompleteScheduleCommand)
+#### CompleteScheduleCommandHandler.Handle(cmd CompleteScheduleCommand)
 ```
 1. schedule := ScheduledTreatmentRepository.FindByID(scheduleID)
 2. schedule.IsOwnedBy(userID) 검증
@@ -475,7 +475,7 @@ const (
 에러: 미존재→ErrNotFound, 소유권→ErrUnauthorized, 이미 완료→ErrConflict
 ```
 
-#### DeleteScheduleHandler.Handle(cmd DeleteScheduleCommand)
+#### DeleteScheduleCommandHandler.Handle(cmd DeleteScheduleCommand)
 ```
 1. schedule := ScheduledTreatmentRepository.FindByID(scheduleID)
 2. schedule.IsOwnedBy(userID) 검증
@@ -484,7 +484,7 @@ const (
 에러: 미존재→ErrNotFound, 소유권→ErrUnauthorized
 ```
 
-#### ProcessRemindersHandler.Handle(cmd ProcessRemindersCommand) (배치)
+#### ProcessRemindersCommandHandler.Handle(cmd ProcessRemindersCommand) (배치)
 ```
 1. schedules := ScheduledTreatmentRepository.FindDue(today)
 2. 각 schedule:
@@ -497,7 +497,7 @@ const (
    e. 실패 → 로그, 다음 배치 재시도
 ```
 
-#### ListRecordsHandler.Handle(query ListRecordsQuery)
+#### ListRecordsQueryHandler.Handle(query ListRecordsQuery)
 ```
 1. 기간 검증 (from < to, 최대 1년)
 2. TreatmentRecordRepository.FindByUserAndPeriod(userID, from, to)
@@ -506,7 +506,7 @@ const (
 에러: 기간 유효하지 않음→ErrValidation
 ```
 
-#### GetRecordHandler.Handle(query GetRecordQuery)
+#### GetRecordQueryHandler.Handle(query GetRecordQuery)
 ```
 1. TreatmentRecordRepository.FindByID(recordID)
 2. 소유권 검증
@@ -515,13 +515,13 @@ const (
 에러: 미존재→ErrNotFound, 소유권→ErrUnauthorized
 ```
 
-#### ListSchedulesHandler.Handle(query ListSchedulesQuery)
+#### ListSchedulesQueryHandler.Handle(query ListSchedulesQuery)
 ```
 1. ScheduledTreatmentRepository.FindByUser(userID)
 2. 결과 반환
 ```
 
-#### GetStatisticsHandler.Handle(query GetStatisticsQuery)
+#### GetStatisticsQueryHandler.Handle(query GetStatisticsQuery)
 ```
 1. TreatmentRecordRepository.CountByUserGrouped(userID)
 2. 카테고리별 집계 반환
