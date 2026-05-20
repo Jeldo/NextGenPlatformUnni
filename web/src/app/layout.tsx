@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { HeroUIProvider } from "@heroui/react";
 import { QueryProvider } from "@/lib/QueryProvider";
 import "./globals.css";
 
@@ -12,9 +11,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className="text-black">
-        <QueryProvider>
-          <HeroUIProvider>{children}</HeroUIProvider>
-        </QueryProvider>
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );

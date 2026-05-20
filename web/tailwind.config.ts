@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-import { heroui } from "@heroui/react";
 
 const config: Config = {
   content: [
@@ -13,14 +12,11 @@ const config: Config = {
           DEFAULT: "#F66336",
         },
         black: "#131517",
-        gray: {
-          description: "#697683",
-        },
+        "gray-description": "#697683",
       },
     },
   },
-  darkMode: "class",
-  plugins: [heroui()],
+  plugins: [],
 };
 
 export default config;
