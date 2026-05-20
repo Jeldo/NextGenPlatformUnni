@@ -13,7 +13,7 @@
 
 | Component | 경로 | 책임 |
 |-----------|------|------|
-| **CalendarPage** | `/calendar` | 월별 캘린더 뷰, 시술 기록 + 예정일 표시 |
+| **CalendarPage** | `/calendar` | 주간 캘린더 뷰 + 날짜 바텀시트 + 하단 시술 통계 |
 | **RecordDetailPage** | `/calendar/records/[id]` | 시술 기록 상세 조회/수정/삭제 |
 | **AddRecordPage** | `/calendar/records/new` | 시술 수동 추가 |
 | **StatisticsPage** | `/calendar/statistics` | 시술 통계 |
@@ -26,10 +26,10 @@
 | **CategoryBottomSheet** | 카테고리 선택 바텀시트 |
 | **TreatmentBottomSheet** | 시술명 선택 바텀시트 |
 | **DosageInput** | 용량 숫자 인풋 + 단위 드롭다운 |
-| **CalendarGrid** | 월별 캘린더 그리드 (확정 일정 + 예정일 점선 구분) |
+| **WeeklyCalendarGrid** | 주간 캘린더 그리드 (카드 형태, 구글 캘린더 스타일) |
 | **RecordCard** | 시술 기록 카드 (목록 아이템) |
 | **ScheduleCard** | 예정일 카드 (점선 스타일) |
-| **HospitalInput** | 병원명 자유 텍스트 + 자동완성 |
+| **HospitalInput** | 병원명 자유 텍스트 입력 |
 | **GoogleCalendarButton** | 구글 캘린더 내보내기 버튼 (OAuth 트리거) |
 | **ReminderBanner** | 리마인드 알림 배너 (앱 내 표시) |
 

@@ -44,6 +44,6 @@
 
 ## Current Status
 - **Lifecycle Phase**: INCEPTION
-- **Current Stage**: CONSTRUCTION - Unit 1 (환경설정)
-- **Next Stage**: Functional Design (Unit 1)
-- **Status**: Ready to proceed
+- **Current Stage**: CONSTRUCTION - Unit 2 (인터페이스 확정) Functional Design
+- **Next Stage**: Code Generation (Unit 2)
+- **Status**: Awaiting user approval

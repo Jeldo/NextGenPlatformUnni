@@ -32,7 +32,7 @@
 
 | Component | 책임 |
 |-----------|------|
-| **WeeklyCalendarGrid** | 주간 캘린더 그리드 (날짜별 시술 dot 표시) |
+| **WeeklyCalendarGrid** | 주간 캘린더 그리드 (날짜별 시술 카드 표시, 구글 캘린더 스타일) |
 | **DateBottomSheet** | 날짜 선택 시 올라오는 바텀시트 (해당 날짜 시술 목록) |
 | **RecordCard** | 시술 기록 카드 (실선 스타일 — 확정 시술) |
 | **ScheduleCard** | 예정일 카드 (점선 스타일 — 예정 시술) |
@@ -41,7 +41,7 @@
 | **TreatmentDropdown** | 3단계 드롭다운 (카테고리 → 시술명 → 용량) |
 | **CategoryBottomSheet** | 카테고리 선택 바텀시트 |
 | **TreatmentBottomSheet** | 시술명 선택 바텀시트 |
-| **DosageInput** | 용량: 숫자인풋 + 단위 드롭다운 |
+| **DosageInput** | 용량: 숫자인풋 + 단위 드롭다운 (shot, minute, volume, vial, joule) |
 | **HospitalInput** | 병원명 자유 텍스트 입력 |
 | **GoogleCalendarButton** | 상세페이지 하단 outline 버튼 "구글 캘린더에 등록하기" |
 | **FloatingAddButton** | 우측 하단 "+" 플로팅 버튼 → AddRecordPage 이동 |
@@ -77,7 +77,7 @@
 구조:
 ┌─────────────────────────┐
 │  WeeklyCalendarGrid     │
-│  (주간 뷰, 날짜별 dot)  │
+│  (주간 뷰, 날짜별 카드) │
 ├─────────────────────────┤
 │  TreatmentStats         │
 │  (시술 통계 인라인)      │

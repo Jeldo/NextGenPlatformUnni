@@ -14,8 +14,8 @@
 
 | Component | Depends On | 관계 |
 |-----------|-----------|------|
-| CalendarPage | CalendarGrid, RecordCard, ScheduleCard | 렌더링 |
-| CalendarGrid | useRecords, useSchedules | 데이터 |
+| CalendarPage | WeeklyCalendarGrid, RecordCard, ScheduleCard | 렌더링 |
+| WeeklyCalendarGrid | useRecords, useSchedules | 데이터 |
 | AddRecordPage | TreatmentDropdown, HospitalInput, DatePicker | 폼 구성 |
 | RecordDetailPage | useRecord, TreatmentDropdown, GoogleCalendarButton | 상세/수정 |
 | TreatmentDropdown | CategoryBottomSheet, TreatmentBottomSheet, DosageInput | 계층 구조 |

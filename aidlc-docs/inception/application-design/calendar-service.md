@@ -138,7 +138,11 @@ const (
 
 type DosageUnit string
 const (
+    DosageShot   DosageUnit = "shot"
+    DosageMinute DosageUnit = "minute"
     DosageVolume DosageUnit = "volume"
+    DosageVial   DosageUnit = "vial"
+    DosageJoule  DosageUnit = "joule"
 )
 
 type TreatmentType string
@@ -256,7 +260,7 @@ type CreateRecordRequest struct {
 
     // Optional
     DosageType       *string  `json:"dosage_type,omitempty"`
-    DosageValue      *float64 `json:"dosage_value,omitempty"`
+    DosageValue      *string  `json:"dosage_value,omitempty"`  // API: string, 내부 도메인: float64로 변환
     HospitalLocation *string  `json:"hospital_location,omitempty"`
     DoctorName       *string  `json:"doctor_name,omitempty"`
     Memo             *string  `json:"memo,omitempty"`
@@ -267,7 +271,7 @@ type UpdateRecordRequest struct {
     CategoryID       *string    `json:"category_id,omitempty"`
     TreatmentID      *string    `json:"treatment_id,omitempty"`
     DosageType       *string    `json:"dosage_type,omitempty"`
-    DosageValue      *float64   `json:"dosage_value,omitempty"`
+    DosageValue      *string    `json:"dosage_value,omitempty"`  // API: string, 내부 도메인: float64로 변환
     TreatmentDate    *time.Time `json:"treatment_date,omitempty"`
     HospitalName     *string    `json:"hospital_name,omitempty"`
     HospitalLocation *string    `json:"hospital_location,omitempty"`
@@ -284,13 +288,17 @@ type RecordResponse struct {
     TreatmentDate    time.Time  `json:"treatment_date"`
     HospitalName     string     `json:"hospital_name"`
     DosageType       *string    `json:"dosage_type,omitempty"`
-    DosageValue      *float64   `json:"dosage_value,omitempty"`
+    DosageValue      *string    `json:"dosage_value,omitempty"`  // API: string, 내부 도메인: float64로 변환
     HospitalLocation *string    `json:"hospital_location,omitempty"`
     DoctorName       *string    `json:"doctor_name,omitempty"`
     Memo             *string    `json:"memo,omitempty"`
     CreatedAt        time.Time  `json:"created_at"`
     UpdatedAt        time.Time  `json:"updated_at"`
 }
+
+// Note: API 레이어에서 DosageValue는 string으로 수신/반환하며,
+// 도메인 모델(TreatmentRecord)에서는 *float64로 저장한다.
+// Presentation 레이어에서 strconv.ParseFloat / fmt.Sprintf로 변환한다.
 
 type ScheduleResponse struct {
     ID            string     `json:"id"`
@@ -528,8 +536,13 @@ func (r *TreatmentRecord) Validate() error {
     if r.TreatmentID == "" { return ErrValidation("treatment_id required") }
     if r.TreatmentDate.IsZero() { return ErrValidation("treatment_date required") }
     if r.HospitalName == "" { return ErrValidation("hospital_name required") }
-    if r.DosageType != nil && *r.DosageType != DosageVolume {
-        return ErrValidation("dosage_type must be volume")
+    if r.DosageType != nil {
+        switch *r.DosageType {
+        case DosageShot, DosageMinute, DosageVolume, DosageVial, DosageJoule:
+            // valid
+        default:
+            return ErrValidation("dosage_type must be one of: shot, minute, volume, vial, joule")
+        }
     }
     return nil
 }

@@ -265,3 +265,35 @@
 **Context**: INCEPTION - Units Generation complete. Moving to Construction Phase.
 
 ---
+
+## Construction - Unit 1 Functional Design
+**Timestamp**: 2026-05-20T14:23:58+09:00
+**User Input**: "B" (Functional Design부터 진행)
+**AI Response**: Created functional design for Unit 1: project directory structures (Go 4-layer, Next.js App Router, FastAPI layered), Docker Compose config, environment variables, health check spec, color theme setup.
+**Context**: CONSTRUCTION - Unit 1 Functional Design.
+
+---
+
+## Construction - Unit 1 Functional Design Approved
+**Timestamp**: 2026-05-20T14:30:17+09:00
+**User Input**: "approve & continue"
+**AI Response**: Functional Design approved. Proceeding to Code Generation (Unit 1).
+**Context**: CONSTRUCTION - Unit 1. Moving to Code Generation.
+
+---
+
+## Construction - Unit 2 Data Model Changes
+**Timestamp**: 2026-05-20T15:03:19+09:00
+**User Input**: "1. id는 모두 uuidv7 형태. 2. DosageUnit을 shot, minute, volume, vial, unit, joule 6개로 확장. 3. dosage_value를 API에서는 string으로 전달, 내부적으로 float 변환."
+**AI Response**: 7개 파일 수정: api-standards.md (UUIDv7), calendar-service.md (DosageUnit 6개 + Validate + Request/Response string), admin-service.md (DosageType units), requirements.md (단위 목록), web-frontend.md (DosageInput), component-methods.md (DTO types), api-contract.md (dummy IDs + dosage_value string).
+**Context**: CONSTRUCTION - Unit 2 Functional Design. Data model refinements.
+
+---
+
+## Construction - Unit 2 Code Generation Start
+**Timestamp**: 2026-05-20T15:15:26+09:00
+**User Input**: "unit 2 진행하자."
+**AI Response**: Starting Code Generation for Unit 2 - API stubs with dummy data for all services.
+**Context**: CONSTRUCTION - Unit 2 Code Generation.
+
+---

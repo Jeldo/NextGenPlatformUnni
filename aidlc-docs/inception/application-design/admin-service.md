@@ -57,7 +57,7 @@ class TreatmentResponse(BaseModel):
     name: str
 
 class DosageTypeCreate(BaseModel):
-    unit: str   # "cc", "ml" 등
+    unit: str   # "shot", "minute", "volume", "vial", "joule"
 
 class DosageTypeResponse(BaseModel):
     id: str

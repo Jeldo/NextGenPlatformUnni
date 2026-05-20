@@ -96,18 +96,13 @@
 ### HospitalInput
 
 ```
-동작 흐름:
-1. 사용자 타이핑 시작
-2. 300ms debounce 후 기존 입력 이력에서 필터링 (로컬 캐시)
-3. 자동완성 드롭다운 표시
-4. 선택 또는 자유 텍스트 입력 완료
+단순 텍스트 인풋 (자유 입력)
+- placeholder: "병원명을 입력하세요"
+- 자동완성 없음
 
 상태 관리:
 - inputValue: string
-- suggestions: string[] (이전 입력 이력 기반)
-- isOpen: boolean
-
-데이터 소스: 사용자의 기존 시술 기록에서 hospitalName 추출 (useRecords 캐시 활용)
+```
 ```
 
 ---
@@ -123,7 +118,7 @@ type TreatmentRecord struct {
     Source          RecordSource       // AUTO | MANUAL
     CategoryID      string
     TreatmentID     string
-    DosageType      *string            // "volume" | nil
+    DosageType      *string            // "shot" | "minute" | "volume" | "vial" | "joule" | nil
     DosageValue     *float64
     TreatmentDate   time.Time
     HospitalName    string
@@ -181,7 +176,7 @@ type Treatment struct {
 type DosageType struct {
     ID          string
     TreatmentID string
-    Type        string  // "volume"
+    Type        string  // "shot", "minute", "volume", "vial", "joule"
     Unit        string  // "cc", "회" 등
 }
 
@@ -220,7 +215,7 @@ type CreateRecordInput struct {
     CategoryID      string
     TreatmentID     string
     DosageType      *string
-    DosageValue     *float64
+    DosageValue     *string   // API: string, 내부 도메인: float64로 변환
     TreatmentDate   time.Time
     HospitalName    string
     HospitalLocation *string
@@ -232,7 +227,7 @@ type UpdateRecordInput struct {
     CategoryID      *string
     TreatmentID     *string
     DosageType      *string
-    DosageValue     *float64
+    DosageValue     *string   // API: string, 내부 도메인: float64로 변환
     TreatmentDate   *time.Time
     HospitalName    *string
     HospitalLocation *string
