@@ -19,12 +19,12 @@ export function GoogleCalendarButton({ title, date, isSchedule }: GoogleCalendar
   return (
     <Button
       variant="bordered"
-      color="primary"
-      className="w-full"
+      size="lg"
+      className="flex-1"
       onPress={handleExport}
       aria-label="구글 캘린더에 등록하기"
     >
-      구글 캘린더에 등록하기
+      구글 캘린더 등록
     </Button>
   );
 }

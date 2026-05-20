@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { Button, Input, Textarea } from "@heroui/react";
 import { TreatmentDropdown } from "@/components/TreatmentDropdown";
 import { DosageInput } from "@/components/DosageInput";
-import { HospitalInput } from "@/components/HospitalInput";
 import { useCreateRecord } from "@/hooks/useCreateRecord";
 
 export default function AddRecordPage() {
@@ -39,46 +38,78 @@ export default function AddRecordPage() {
   };
 
   return (
-    <main className="min-h-screen p-4 pb-20">
-      <h1 className="text-xl font-bold mb-6">시술 추가</h1>
+    <main className="min-h-screen bg-white flex flex-col">
+      {/* Header */}
+      <header className="flex items-center px-5 py-4 border-b border-black/10 sticky top-0 bg-white z-10">
+        <button onClick={() => router.back()} className="text-xl mr-3 min-w-[44px] min-h-[44px] flex items-center">‹</button>
+        <span className="text-[17px] font-semibold">시술 추가</span>
+      </header>
 
-      <div className="flex flex-col gap-4">
-        <Input
-          type="date"
-          label="시술 날짜"
-          value={treatmentDate}
-          onValueChange={setTreatmentDate}
-          isRequired
-          aria-label="시술 날짜"
-        />
+      {/* Form */}
+      <div className="flex-1 px-5 py-5 flex flex-col gap-5">
+        {/* 날짜 */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[13px] font-semibold text-black">
+            날짜 <span className="text-red-500">*</span>
+          </label>
+          <Input
+            type="date"
+            value={treatmentDate}
+            onValueChange={setTreatmentDate}
+            isRequired
+            aria-label="시술 날짜"
+          />
+        </div>
 
-        <HospitalInput value={hospitalName} onChange={setHospitalName} />
+        {/* 병원명 */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[13px] font-semibold text-black">
+            병원명 <span className="text-red-500">*</span>
+          </label>
+          <Input
+            placeholder="병원명을 입력하세요"
+            value={hospitalName}
+            onValueChange={setHospitalName}
+            isRequired
+            aria-label="병원명"
+          />
+        </div>
 
-        <TreatmentDropdown
-          categoryId={categoryId}
-          treatmentId={treatmentId}
-          dosageType={dosageType}
-          onCategoryChange={setCategoryId}
-          onTreatmentChange={setTreatmentId}
-          onDosageTypeChange={setDosageType}
-        />
+        {/* 시술 정보 */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[13px] font-semibold text-black">
+            시술 정보 <span className="text-red-500">*</span>
+          </label>
+          <TreatmentDropdown
+            categoryId={categoryId}
+            treatmentId={treatmentId}
+            dosageType={dosageType}
+            onCategoryChange={setCategoryId}
+            onTreatmentChange={setTreatmentId}
+            onDosageTypeChange={setDosageType}
+          />
+          {dosageType && (
+            <DosageInput value={dosageValue} unit={dosageType} onChange={setDosageValue} />
+          )}
+        </div>
 
-        {dosageType && (
-          <DosageInput value={dosageValue} unit={dosageType} onChange={setDosageValue} />
-        )}
+        {/* 메모 */}
+        <div className="flex flex-col gap-1.5">
+          <label className="text-[13px] font-semibold text-black">메모</label>
+          <Textarea
+            placeholder="메모를 입력하세요 (선택)"
+            value={memo}
+            onValueChange={setMemo}
+            aria-label="메모"
+            minRows={3}
+          />
+        </div>
 
-        <Textarea
-          label="메모 (선택)"
-          placeholder="추가 메모를 입력하세요"
-          value={memo}
-          onValueChange={setMemo}
-          aria-label="메모"
-        />
-
+        {/* 저장 */}
         <Button
           color="primary"
           size="lg"
-          className="w-full mt-4"
+          className="w-full mt-2 font-semibold"
           isDisabled={!isValid}
           isLoading={isPending}
           onPress={handleSubmit}

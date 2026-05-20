@@ -51,44 +51,38 @@ export function WeeklyCalendarGrid({ records, schedules, onDateSelect }: WeeklyC
     return map;
   }, [schedules]);
 
-  const prevWeek = () => {
-    const d = new Date(weekStart);
-    d.setDate(d.getDate() - 7);
-    setWeekStart(d);
-  };
-
-  const nextWeek = () => {
-    const d = new Date(weekStart);
-    d.setDate(d.getDate() + 7);
-    setWeekStart(d);
-  };
+  const prevWeek = () => setWeekStart((prev) => { const d = new Date(prev); d.setDate(d.getDate() - 7); return d; });
+  const nextWeek = () => setWeekStart((prev) => { const d = new Date(prev); d.setDate(d.getDate() + 7); return d; });
 
   const today = formatDate(new Date());
 
   return (
     <div className="w-full" role="grid" aria-label="주간 캘린더">
-      {/* Header: 주 이동 */}
-      <div className="flex items-center justify-between mb-2">
-        <button onClick={prevWeek} className="p-2 min-w-[44px] min-h-[44px]" aria-label="이전 주">
-          ‹
-        </button>
-        <span className="text-sm font-semibold">
-          {weekDates[0].getMonth() + 1}월 {weekDates[0].getDate()}일 ~ {weekDates[6].getMonth() + 1}월 {weekDates[6].getDate()}일
-        </span>
-        <button onClick={nextWeek} className="p-2 min-w-[44px] min-h-[44px]" aria-label="다음 주">
-          ›
-        </button>
+      {/* Header */}
+      <div className="flex items-center justify-between py-2">
+        <div className="flex items-center gap-1">
+          <button onClick={prevWeek} className="p-2 min-w-[44px] min-h-[44px] text-sm" aria-label="이전 주">‹</button>
+          <span className="text-sm font-medium">
+            {weekDates[0].getMonth() + 1}월 {weekDates[0].getDate()}일 — {weekDates[6].getMonth() + 1}월 {weekDates[6].getDate()}일
+          </span>
+          <button onClick={nextWeek} className="p-2 min-w-[44px] min-h-[44px] text-sm" aria-label="다음 주">›</button>
+        </div>
+        {/* 범례 */}
+        <div className="flex items-center gap-2 text-[11px] text-gray-description">
+          <span className="flex items-center gap-1"><span className="w-2 h-2 bg-black rounded-sm" />확정</span>
+          <span className="flex items-center gap-1"><span className="w-2 h-2 border border-dashed border-black rounded-sm" />예정</span>
+        </div>
       </div>
 
       {/* Day labels */}
-      <div className="grid grid-cols-7 text-center text-xs text-gray-description mb-1">
+      <div className="grid grid-cols-7 text-center text-[11px] text-gray-description mb-1 font-medium">
         {DAY_LABELS.map((label) => (
-          <span key={label}>{label}</span>
+          <span key={label} className="underline decoration-gray-300 underline-offset-2">{label}</span>
         ))}
       </div>
 
       {/* Date cells */}
-      <div className="grid grid-cols-7 gap-px min-h-[120px]">
+      <div className="grid grid-cols-7 gap-px min-h-[100px]">
         {weekDates.map((date) => {
           const key = formatDate(date);
           const dayRecords = recordsByDate[key] || [];
@@ -99,28 +93,25 @@ export function WeeklyCalendarGrid({ records, schedules, onDateSelect }: WeeklyC
             <button
               key={key}
               onClick={() => onDateSelect(key)}
-              className={`flex flex-col items-center p-1 min-h-[100px] rounded-md ${
-                isToday ? "bg-primary/10" : "hover:bg-gray-50"
-              }`}
+              className="flex flex-col items-center p-1 min-h-[90px] rounded-md hover:bg-gray-50"
               aria-label={`${date.getMonth() + 1}월 ${date.getDate()}일`}
             >
-              <span className={`text-xs mb-1 ${isToday ? "text-primary font-bold" : ""}`}>
+              <span className={`text-sm mb-1.5 w-7 h-7 flex items-center justify-center rounded-full ${
+                isToday ? "bg-primary text-white font-bold" : "text-black"
+              }`}>
                 {date.getDate()}
               </span>
               <div className="flex flex-col gap-0.5 w-full overflow-hidden">
                 {dayRecords.slice(0, 2).map((r) => (
-                  <div key={r.id} className="text-[10px] bg-primary/10 border border-primary/30 rounded px-0.5 truncate">
-                    {r.hospital_name}
+                  <div key={r.id} className="text-[9px] bg-black text-white rounded px-1 py-0.5 truncate leading-tight">
+                    {r.hospital_name.slice(0, 3)}…
                   </div>
                 ))}
                 {daySchedules.slice(0, 2).map((s) => (
-                  <div key={s.id} className="text-[10px] border border-dashed border-primary/50 rounded px-0.5 truncate text-primary">
-                    예정
+                  <div key={s.id} className="text-[9px] border border-dashed border-black rounded px-1 py-0.5 truncate leading-tight text-black">
+                    예정…
                   </div>
                 ))}
-                {(dayRecords.length + daySchedules.length > 2) && (
-                  <span className="text-[9px] text-gray-description">+{dayRecords.length + daySchedules.length - 2}</span>
-                )}
               </div>
             </button>
           );
