@@ -3,10 +3,10 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-05-20T11:38:51+09:00
-- **Current Stage**: INCEPTION - Workflow Planning (Complete)
+- **Current Stage**: CONSTRUCTION - Unit 3-A (Frontend) Code Generation
 
 ## Workspace State
-- **Existing Code**: No
+- **Existing Code**: Yes (Unit 1, 2 complete)
 - **Reverse Engineering Needed**: No
 - **Workspace Root**: /Users/taeyoungkwak/GitHub/NextGenPlatformUnni
 
@@ -32,18 +32,45 @@
 - [x] Units Generation
 
 ### 🟢 CONSTRUCTION PHASE
-- [ ] Functional Design - EXECUTE (per-unit)
-- [ ] NFR Requirements - EXECUTE (per-unit)
-- [ ] NFR Design - EXECUTE (per-unit)
-- [ ] Infrastructure Design - EXECUTE (per-unit)
-- [ ] Code Generation - EXECUTE (per-unit)
+
+#### Unit 1: 환경설정
+- [x] Functional Design
+- [x] Code Generation
+
+#### Unit 2: 인터페이스 확정
+- [x] Functional Design
+- [x] Code Generation
+
+#### Unit 3-A: Frontend (Next.js)
+- [x] Code Generation - Phase 1 (RecordCard, ScheduleCard, FloatingAddButton, TreatmentStats)
+- [x] Code Generation - Phase 2 (TreatmentDropdown, DosageInput, HospitalInput, AddRecordPage)
+- [x] Code Generation - Phase 3 (WeeklyCalendarGrid, DateBottomSheet, CalendarPage)
+- [x] Code Generation - Phase 4 (ScheduleConfirmModal, RecordDetailPage 수정/삭제)
+- [x] Code Generation - Phase 5 (GoogleCalendarButton, Error Handling)
+- [ ] Code Generation - Phase 6 (Playwright E2E 테스트)
+
+#### Unit 3-B: Backend (Go Calendar Service)
+- [x] Functional Design
+- [ ] Code Generation
+
+#### Unit 3-C: Admin Service (FastAPI)
+- [ ] Functional Design
+- [ ] Code Generation
+
+#### Build and Test
 - [ ] Build and Test - EXECUTE
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations - PLACEHOLDER
 
 ## Current Status
-- **Lifecycle Phase**: INCEPTION
-- **Current Stage**: CONSTRUCTION - Unit 2 (인터페이스 확정) Functional Design
-- **Next Stage**: Code Generation (Unit 2)
-- **Status**: Awaiting user approval
+- **Lifecycle Phase**: CONSTRUCTION
+- **Current Stage**: Unit 3-A Code Generation - Phase 6 (E2E 테스트)
+- **Next Stage**: Unit 3-A 완료 후 커밋
+- **Status**: In Progress
+- **Package Manager**: pnpm (npm → pnpm 전환 완료)
+
+## Unit 3-A Progress Summary
+- **단위 테스트**: 37개 통과 (vitest 3.2.4 + happy-dom)
+- **구현 컴포넌트**: 12개 (RecordCard, ScheduleCard, FloatingAddButton, TreatmentStats, TreatmentDropdown, DosageInput, HospitalInput, WeeklyCalendarGrid, DateBottomSheet, ScheduleConfirmModal, GoogleCalendarButton, AddRecordPage/RecordDetailPage/CalendarPage)
+- **브라우저 검증**: 모든 페이지 정상 동작 확인

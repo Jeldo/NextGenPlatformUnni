@@ -289,3 +289,79 @@
 **Context**: CONSTRUCTION - Unit 3-B Functional Design.
 
 ---
+
+---
+
+## Construction - Unit 3-A (Frontend) Code Generation Start
+**Timestamp**: 2026-05-20T15:36:14+09:00
+**User Input**: "나는 프론트엔드 개발자고, 지금 construction 단계에서 unit2 까지 완료된 것을 알아. 이제 unit3 를 시작하려고 하는데 시작할 수 있는 상태인지 확인 꼼꼼하게 해줘. 그리고 추가로 npm 이 아니라 우리는 pnpm 을 사용할거야"
+**AI Response**: Unit 3-A 시작 준비 상태 점검 완료. 선행 조건 모두 충족 (API 계약 문서, Calendar Service 스텁, TypeScript 타입, React Query Hooks, 페이지 라우팅 구조). pnpm 전환 필요 확인.
+**Context**: CONSTRUCTION - Unit 3-A 시작 준비 확인. npm → pnpm 전환 결정.
+
+---
+
+## Construction - Unit 3-A 서비스 실행 확인
+**Timestamp**: 2026-05-20T15:38:22+09:00
+**User Input**: "방금 git pull origin main -r 다시 해서 다시 검토해줘. 그리고 전체적인 서비스 한번 띄워줘"
+**AI Response**: git pull 후 재검토. package.json에서 @heroui/react, framer-motion 빠진 것 확인. pnpm install + HeroUI 복원 + Docker Compose로 전체 서비스 실행. PostgreSQL(5432), Calendar API(8080), Admin API(8081), Web(3000) 모두 정상.
+**Context**: CONSTRUCTION - 전체 서비스 로컬 실행 확인 완료.
+
+---
+
+## Construction - Unit 3-A 테스트 환경 셋업
+**Timestamp**: 2026-05-20T15:46:46+09:00
+**User Input**: "오케이 진행해줘 그리고 병렬로 할 수 있는 건 없는지도 확인해줘. 그리고 진행할 때 테스트코드도 같이 추가하는거지? 마지막에 playwright testcode 로 전체검증하는 것 까지 고려해서 진행해줘"
+**AI Response**: 6 Phase 실행 계획 수립 (Phase 1+2 병렬 가능). vitest 3.2.4 + happy-dom + @testing-library/react + @playwright/test + msw 설치. vitest 4.x rolldown 이슈 → 3.x 다운그레이드, jsdom ESM 이슈 → happy-dom 전환, HeroUI ESM 이슈 → server.deps.inline 설정으로 해결.
+**Context**: CONSTRUCTION - Unit 3-A 테스트 환경 셋업 완료.
+
+---
+
+## Construction - Unit 3-A Phase 1 완료
+**Timestamp**: 2026-05-20T15:48:19+09:00
+**AI Response**: RecordCard, ScheduleCard, FloatingAddButton, TreatmentStats 구현 + 14개 단위 테스트 통과.
+**Context**: CONSTRUCTION - Unit 3-A Phase 1 (기반 컴포넌트) 완료.
+
+---
+
+## Construction - Unit 3-A Phase 2 완료
+**Timestamp**: 2026-05-20T15:49:50+09:00
+**AI Response**: TreatmentDropdown, DosageInput, HospitalInput, AddRecordPage 구현 + 8개 단위 테스트 통과. HeroUI Select 중복 라벨 이슈 → getAllByLabelText로 해결.
+**Context**: CONSTRUCTION - Unit 3-A Phase 2 (독립 페이지) 완료.
+
+---
+
+## Construction - Unit 3-A Phase 3 완료
+**Timestamp**: 2026-05-20T15:55:20+09:00
+**AI Response**: WeeklyCalendarGrid, DateBottomSheet 구현. CalendarPage를 새 컴포넌트로 재구성. 10개 단위 테스트 추가. 총 32개 테스트 통과. 브라우저에서 주간 캘린더 + 날짜 바텀시트 정상 동작 확인.
+**Context**: CONSTRUCTION - Unit 3-A Phase 3 (메인 화면) 완료.
+
+---
+
+## Construction - Unit 3-A 커밋 + Pull
+**Timestamp**: 2026-05-20T16:01:00+09:00
+**User Input**: "오케이 지금까지 작업한거 커밋하고 main 한번 pull 받자"
+**AI Response**: `feat(web): Unit 3-A Phase 1~3 - UI 컴포넌트 + 테스트 환경` 커밋 (30 files changed). git pull origin main --rebase 성공 (충돌 없음).
+**Context**: CONSTRUCTION - Phase 1~3 커밋 완료.
+
+---
+
+## Construction - Unit 3-A Phase 4 완료
+**Timestamp**: 2026-05-20T16:04:12+09:00
+**User Input**: "ㅇㅇ 진행 고고"
+**AI Response**: ScheduleConfirmModal 구현 (받았어요/삭제 모달), RecordDetailPage 재구현 (상세 + 수정 모드 + 삭제), CalendarPage에 ScheduleConfirmModal 연결. 37개 테스트 통과. 브라우저에서 상세 페이지 + 수정 모드 정상 동작 확인.
+**Context**: CONSTRUCTION - Unit 3-A Phase 4 (인터랙션) 완료.
+
+---
+
+## Construction - Unit 3-A Phase 5 완료
+**Timestamp**: 2026-05-20T16:05:37+09:00
+**AI Response**: GoogleCalendarButton 구현 (구글 캘린더 URL 방식 내보내기, 예정일은 '(예정)' prefix). RecordDetailPage에 연결. 37개 테스트 유지. 브라우저에서 "구글 캘린더에 등록하기" 버튼 정상 표시 확인.
+**Context**: CONSTRUCTION - Unit 3-A Phase 5 (부가 기능) 완료.
+
+---
+
+## Construction - Unit 3-A AIDLC 문서 보충
+**Timestamp**: 2026-05-20T16:06:32+09:00
+**User Input**: "aidlc 로 작업하는거 알고있지?" → "지금 보충하자"
+**AI Response**: aidlc-state.md 업데이트 (Unit 3-A 진행 상태 반영), audit.md에 전체 작업 로그 추가.
+**Context**: CONSTRUCTION - AIDLC 문서 정합성 보충.
