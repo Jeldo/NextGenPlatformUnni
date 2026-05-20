@@ -9,8 +9,18 @@ Activate when the user says any of:
 - "wireframe 만들어줘"
 - "[페이지명/컴포넌트명] 와이어프레임"
 - "wireframe for [page/component]"
+- "와이어프레임 캡쳐해줘"
+- "wireframe 캡쳐"
 
 ## Behavior
+
+### On "와이어프레임 캡쳐해줘" (screenshot)
+1. `/tmp/wf-capture/` 디렉토리에 puppeteer가 설치되어 있는지 확인 (없으면 `mkdir -p /tmp/wf-capture && cd /tmp/wf-capture && npm init -y && npm install puppeteer`)
+2. `wireframes/` 디렉토리의 모든 `.html` 파일을 대상으로 puppeteer 스크립트 실행:
+   - viewport: 800×1200
+   - `fullPage: true`
+   - 출력: 같은 디렉토리에 동일 파일명의 `.png`
+3. 캡처 완료 후 생성된 파일 목록 보고
 
 ### On "전체 와이어프레임 만들어줘" (all pages)
 1. Read `aidlc-docs/inception/application-design/web-frontend.md`
