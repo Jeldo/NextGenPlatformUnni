@@ -130,6 +130,7 @@ flowchart TD
 | Application Design | 8개 설계 문서 | 서비스별 상세 설계 (Hexagonal 구조, API 명세, 상태 전이) |
 | Units Generation | units.md | 3단계 Unit 분리 (환경설정 → 인터페이스 → 병렬 개발) |
 
+
 ### 단계별 정합성 체크
 
 각 단계의 산출물이 이전 단계와 일관성을 유지하도록 **cross-reference 검증**을 수행했습니다.
@@ -144,14 +145,9 @@ Application Design (컴포넌트 메서드)
 Units Generation (작업 단위)
 ```
 
-구체적으로:
-- **Requirements → Stories**: 모든 FR이 최소 1개 이상의 Story로 커버되는지 확인
-- **Stories → Application Design**: 각 Story의 AC가 컴포넌트 메서드로 구현 가능한지 검증
-- **Application Design → Units**: 모든 컴포넌트가 Unit에 배정되었는지 확인
-
 ### Application Design의 세밀한 설계
 
-AIDLC의 Application Design은 보통 컴포넌트 목록과 의존성 정도를 정의하는 수준에서 끝나기 쉽습니다. 이 프로젝트에서는 한 단계 더 들어가 **각 기능 요구사항(FR)에 대해 컴포넌트 간 호출 흐름, 에러 처리, 상태 전이까지 모두 명시**했습니다.
+각 기능 요구사항(FR)에 대해 **컴포넌트 간 호출 흐름, 에러 처리, 상태 전이까지 모두 명시**했습니다. 설계 문서 8개, 총 80KB 분량.
 
 예시 — FR-1 (시술 자동 기입) 설계:
 ```
@@ -165,42 +161,40 @@ Event Consumer
   → ACK (성공) / DLQ (3회 실패)
 ```
 
-이 수준의 설계가 있으면 코드 생성 시 AI가 "무엇을 만들지"뿐 아니라 "어떤 순서로, 어떤 예외를 처리하며 만들지"까지 정확히 따릅니다. 설계 문서 8개, 총 80KB 분량의 상세 설계가 Construction 단계의 품질을 결정했습니다.
+### Steering을 통한 정합성 보장
 
-### Steering을 통한 정합성 보장 시스템
+Inception 설계 의도가 Construction에서 훼손되지 않도록 **8개 Steering 규칙 파일**을 구성했습니다:
 
-Inception에서 생성된 설계 문서의 의도가 Construction(코드 생성) 단계에서 훼손되지 않도록 **Steering 규칙**을 두었습니다.
+| Steering 파일 | 역할 |
+|--------------|------|
+| `product.md` | 제품 목적, 사용자, 핵심 기능 |
+| `tech.md` | 기술 스택, 서비스 간 통신 |
+| `structure.md` | 프로젝트 디렉토리 구조 |
+| `api-standards.md` | REST API 공통 규칙 (URL, 에러 형식, CORS) |
+| `testing-standards.md` | Classicist 테스트, PBT, 커버리지 기준 |
+| `go-conventions.md` | Go 4-Layer Hexagonal, CQRS, Rich Domain Model |
+| `python-conventions.md` | FastAPI 계층형, async, Pydantic v2 |
+| `frontend-conventions.md` | Next.js App Router, HeroUI, React Query |
+
+### Agent 활용
+
+| Agent | 용도 |
+|-------|------|
+| `ai-dlc.json` | AI-DLC 워크플로우 전체 제어 — Inception→Construction 자동 진행 |
+| `wireframe-generator.md` | Inception 문서 기반 HTML 와이어프레임 자동 생성 |
+
+### 멀티 에이전트 병렬 개발
+
+4명의 팀원이 **각자 Kiro CLI 세션**에서 동시에 작업:
 
 ```
-.kiro/steering/
-└── aws-aidlc-rules/
-    └── core-workflow.md    ← AIDLC 워크플로우 전체 제어
+[Go 개발자]     → Unit 3-B: Calendar Service (CQRS + Hexagonal)
+[Python 개발자] → Unit 3-C: Admin Service + 시술 데이터 시딩
+[Frontend 개발자] → Unit 3-A: Next.js UI 컴포넌트 + E2E 테스트
+[디자이너]      → 와이어프레임 Agent로 UI 시안 생성
 ```
 
-Steering 생성 전략:
-1. **기술스택별 Steering 생성 시 Inception 문서를 참조**하도록 규칙화
-   - Go 서비스 steering → `application-design/calendar-service.md` 참조
-   - Frontend steering → `application-design/web-frontend.md` 참조
-   - FastAPI steering → `application-design/admin-service.md` 참조
-2. **각 기술스택의 Best Practice도 함께 참조**하여 설계 의도 + 기술 품질을 동시에 확보
-3. 이를 통해 AI가 코드를 생성할 때 **설계 문서에서 벗어나는 것을 시스템적으로 방지**
-
-이 구조의 핵심은 "사람이 매번 확인하지 않아도, Steering이 설계 정합성을 자동으로 강제한다"는 점입니다.
-
-### 단계간 정합성 보장의 전체 그림
-
-```
-Inception 산출물 (설계 의도)
-    ↓ Steering이 참조하도록 규칙화
-Construction (코드 생성)
-    ↓ Playwright MCP로 검증
-E2E 테스트 (기능 요구사항 충족 확인)
-```
-
-정합성을 **3중으로 보장**합니다:
-1. **설계 시점** — 각 Inception 단계에서 이전 단계와 cross-reference 검증
-2. **생성 시점** — Steering이 AI의 코드 생성을 설계 문서 범위 내로 제한
-3. **검증 시점** — Playwright E2E가 유저 스토리 AC 기준으로 기능 동작을 확인
+Unit 2에서 API 계약을 확정한 후, 3개 서비스를 **완전 독립적으로 병렬 개발**. Steering이 각 세션에서 동일한 설계 규칙을 강제하여 병합 시 충돌 최소화.
 
 ---
 
@@ -215,131 +209,132 @@ graph TD
     end
 
     subgraph Service["Service Layer"]
-        API["Calendar API (Go, Hexagonal)<br/>Port 8080<br/>시술 기록 CRUD · 예정일 계산 · 통계"]
-        ADMIN["Admin API (FastAPI)<br/>Port 8081<br/>시술 데이터 CRUD · 추천 주기 관리"]
-        NOTI["알림 시스템 (Mock)"]
-        EVENT["Event Consumer (Go)<br/>SQS 구독 · 멱등성 보장 · DLQ"]
-        CRON["Cron Scheduler (Go)<br/>리마인드 알림 배치 발송"]
+        API["Calendar API (Go, Echo)<br/>Hexagonal 4-Layer + CQRS<br/>Port 8080"]
+        ADMIN["Admin API (FastAPI)<br/>Port 8081<br/>시술 데이터 + 추천 주기 + AI Suggest"]
+        EVENT["Event Consumer (Go)<br/>SQS 구독 · 멱등성 · DLQ"]
+        CRON["Cron Scheduler (Go)<br/>리마인드 배치"]
     end
 
     subgraph Data["Data Layer"]
-        DB[("PostgreSQL<br/>treatment_records<br/>scheduled_treatments<br/>categories · treatments<br/>dosage_types · cycle_rules")]
+        DB[("PostgreSQL 16<br/>6 tables, UUIDv7")]
     end
 
-    subgraph External["External"]
-        SQS["AWS SQS<br/>예약 확정 이벤트"]
+    subgraph AWS["AWS Services"]
+        SQS["SQS — 예약 이벤트"]
+        BEDROCK["Bedrock (Claude Opus)<br/>AI 시술 추천"]
     end
 
     WEB -->|REST| API
-    API -->|"HTTP (3s timeout)"| ADMIN
-    API -->|"HTTP (5s timeout)"| NOTI
-    CRON -->|알림 발송 요청| NOTI
+    API -->|"HTTP 3s"| ADMIN
     SQS --> EVENT
     EVENT --> API
     API --> DB
     ADMIN --> DB
+    ADMIN --> BEDROCK
 ```
+
+### AWS 서비스 활용
+
+| AWS 서비스 | 용도 | 선택 근거 |
+|-----------|------|----------|
+| **Amazon Bedrock** (Claude Opus) | 시술명 입력 시 카테고리·주기·단위 자동 추천 | 관리자 데이터 입력 효율화, 정확도 위해 Opus 선택 |
+| **Amazon SQS** | 예약 확정 이벤트 비동기 구독 | 메시지 보존(4일), DLQ, 순서 보장 불필요 |
+| **Amazon RDS (PostgreSQL)** | 시술 기록 + 예정일 + 마스터 데이터 | 관계형 데이터, 트랜잭션 필요 |
+| **Amazon ECS** | 컨테이너 배포 (API + Consumer + Cron) | Docker 기반, 서비스별 독립 스케일링 |
+| **CloudWatch** | 로그 집계 + 알림 | 구조화 로깅(slog) 연동 |
 
 ### 핵심 설계 결정
 
 | 결정 | 근거 |
 |------|------|
-| **Hexagonal Architecture** | 외부 의존성(SQS, 알림, Admin API)을 Port/Adapter로 분리 → 테스트 격리, 모킹 용이 |
-| **Event Consumer 별도 프로세스** | API 서버와 독립 스케일링, 장애 격리, SQS 메시지 보존으로 복구 용이 |
-| **Go 모듈 코드베이스 공유** | Calendar API + Event Consumer가 동일 도메인 로직 재사용 |
-| **예정일 별도 테이블** | 조회 성능 최적화, 리마인드 배치 쿼리 단순화 |
-| **Circuit Breaker** | Admin API 장애 시 Calendar API graceful degradation |
-| **멱등성 (Event Consumer)** | 중복 이벤트 안전 처리, DLQ로 파싱 불가 메시지 격리 |
-
-### AWS 서비스 활용
-
-| 서비스 | 용도 |
-|--------|------|
-| **SQS/SNS** | 예약 확정 이벤트 구독 (프로덕션) |
-| **RDS (PostgreSQL)** | 데이터 저장소 |
-| **ECS** | 컨테이너 기반 서비스 배포 |
-| **CloudWatch** | 모니터링, 알림 |
-
-### 확장성 설계
-
-Phase 2 (AI 추천 주기) 확장을 고려한 설계:
-- 추천 주기 로직이 Admin API에 격리되어 있어, 룰베이스 → AI/LLM 교체 시 Calendar Service 변경 불필요
-- 이벤트 기반 아키텍처로 새로운 Consumer 추가 용이
-- 캘린더 데이터 축적 → 개인화 모델 학습 데이터로 활용 가능
+| Hexagonal 4-Layer + CQRS | 외부 의존성 격리, 테스트 용이, 읽기/쓰기 분리 |
+| Rich Domain Model | 비즈니스 로직을 모델에 집중 (Anemic 방지) |
+| Event Consumer 별도 프로세스 | API와 독립 스케일링, 장애 격리 |
+| 예정일 별도 테이블 | 배치 쿼리 최적화, 상태 관리 |
+| Circuit Breaker (Admin API) | 외부 서비스 장애 시 graceful degradation |
+| UUIDv7 | 시간 순서 정렬 + 분산 생성 |
 
 ---
 
-## 4. 개발 프로세스 & 품질
+## 4. 완성도 & 품질
 
-### 와이어프레임 Agent
+### 기능 동작
 
-디자이너의 의도를 정확히 반영하기 위해 **와이어프레임을 생성하는 전용 Agent**를 구축했습니다.
-
-- 와이어프레임 HTML을 생성하는 Agent를 만들어 UI 시안을 빠르게 프로토타이핑
-- 생성된 스크린샷을 기준으로 레이아웃을 잡아 **디자이너의 의도에 맞는 구현**을 보장
-- PRD에 포함된 와이어프레임 시안과 실제 구현 간의 갭을 최소화
-
-### Playwright MCP 기반 E2E 테스트
-
-각 기능 요구사항의 충족 여부를 **Playwright MCP를 통해 자동 검증**합니다.
-
-- 모든 유저 스토리의 Acceptance Criteria를 E2E 테스트로 커버
-- 기능 요구사항 충족에 대한 안정성 확보
-- 향후 유지보수 시에도 기존 기능의 regression을 자동 감지
+| 기능 | 구현 상태 | 검증 방식 |
+|------|----------|----------|
+| 시술 자동 기입 (이벤트 구독) | ✅ 구현 | Mock 엔드포인트 + 멱등성 테스트 |
+| 시술 수동 CRUD | ✅ 구현 | 단위 테스트 + E2E (Playwright) |
+| 3단계 드롭다운 (카테고리→시술→용량) | ✅ 구현 | 컴포넌트 테스트 |
+| 다음 시술 예정일 계산 | ✅ 구현 | PBT (rapid) + 단위 테스트 |
+| 리마인드 알림 배치 | ✅ 구현 | 핸들러 테스트 (예약 유무 분기) |
+| 시술 통계 | ✅ 구현 | 쿼리 핸들러 테스트 |
+| 구글 캘린더 내보내기 | ✅ 구현 | OAuth + "(예정)" prefix |
+| 추천 주기 관리 (Admin) | ✅ 구현 | 통합 테스트 |
+| AI 시술 추천 (Bedrock) | ✅ 구현 | Bedrock invoke 검증 |
 
 ### 테스트 전략
 
-| 레벨 | 방식 | 대상 |
-|------|------|------|
-| 단위 테스트 | Classicist (실제 객체 우선) | 도메인 로직, 핸들러 |
-| Property-Based Testing | 순수 함수 대상 | 주기 계산, 날짜 연산 |
-| 통합 테스트 | 실제 DB 사용 | Repository, API 엔드포인트 |
-| E2E 테스트 | Playwright MCP | 유저 스토리 AC 검증 |
-
-외부 의존성(이벤트, 알림, Admin API)만 모킹하고, 내부 로직은 실제 객체를 사용하는 Classicist 방식을 채택했습니다.
+| 레벨 | 도구 | 대상 | 수량 |
+|------|------|------|------|
+| 단위 테스트 | Go `testing` | Domain Model, CQRS Handlers | 21 tests |
+| Property-Based | `rapid` | CycleCalculator (날짜 연산) | 4 properties |
+| 컴포넌트 테스트 | Vitest + Testing Library | React 컴포넌트 | 37 tests |
+| E2E 테스트 | Playwright | 유저 스토리 AC 검증 | 1 spec |
 
 ### 운영 안정성
 
 | 패턴 | 적용 위치 | 효과 |
 |------|-----------|------|
-| Circuit Breaker | Calendar API → Admin API 호출 | Admin API 장애 시 graceful degradation |
-| 멱등성 | Event Consumer | 중복 이벤트 안전 처리 |
-| DLQ (Dead Letter Queue) | SQS Consumer | 파싱 불가 메시지 격리, 수동 재처리 |
-| Retry (3회) | Event Consumer | 일시적 장애 자동 복구 |
-| Timeout | 서비스 간 HTTP 호출 | Admin API 3s, 알림 5s — 무한 대기 방지 |
+| Circuit Breaker | Calendar → Admin API | 장애 전파 차단 |
+| 멱등성 (UNIQUE INDEX) | Event Consumer | 중복 이벤트 안전 처리 |
+| DLQ | SQS Consumer | 파싱 불가 메시지 격리 |
+| Retry (3회, exponential) | Event Consumer | 일시 장애 자동 복구 |
+| Timeout (3s/5s) | 서비스 간 HTTP | 무한 대기 방지 |
+| Graceful Shutdown | Echo 서버 | 진행 중 요청 완료 후 종료 |
 
-### 장애 대응 매트릭스
+### 보안
 
-| 장애 상황 | 시스템 동작 | 사용자 영향 |
-|-----------|------------|------------|
-| Admin API 다운 | 시술 기록 정상, 예정일 미생성 | 예정일 표시 안됨 (기록은 정상) |
-| 알림 시스템 다운 | 배치 스킵, 다음 배치 재시도 | 리마인드 지연 |
-| SQS 지연 | Event Consumer 대기 | 자동 기입 지연 |
-| PostgreSQL 다운 | 전체 서비스 중단 | 서비스 이용 불가 |
+- 입력값 검증: Rich Domain Model `Validate()` + Pydantic v2
+- SQL Injection 방지: pgx parameterized queries + SQLAlchemy ORM
+- CORS 화이트리스트 (localhost:3000만 허용)
+- 민감 정보 미노출: 에러 응답에 내부 구현 정보 제외
+- 환경변수 기반 시크릿 관리 (.env gitignore)
 
 ---
 
 ## 5. 프로젝트 구조
 
 ```
-/
-├── aidlc-docs/                    # AI-DLC 산출물
-│   ├── inception/
-│   │   ├── requirements/          # 요구사항 (FR 9개, NFR 4개)
-│   │   ├── user-stories/          # 유저 스토리 (7 Epic, 14 Stories)
-│   │   ├── application-design/    # 서비스별 상세 설계 (8개 문서)
-│   │   ├── plans/                 # 실행 계획
-│   │   └── units-generation/      # 작업 단위 분리
-│   ├── aidlc-state.md             # 워크플로우 상태 추적
-│   └── audit.md                   # 전체 의사결정 감사 로그
-├── docs/
-│   └── PRD.md                     # 제품 요구사항 문서
+NextGenPlatformUnni/
+├── calendar-service/         # Go — Calendar API + Event Consumer + Cron
+│   ├── cmd/api/              # Echo HTTP 서버
+│   ├── cmd/consumer/         # SQS Event Consumer
+│   ├── cmd/cron/             # 리마인드 배치
+│   ├── internal/
+│   │   ├── presentation/     # HTTP Handlers, DTOs
+│   │   ├── application/      # CQRS (command/, query/)
+│   │   ├── domain/           # Rich Models, Services, Ports
+│   │   └── infrastructure/   # PostgreSQL, HTTP Clients
+│   └── migrations/           # DB 스키마
+├── admin-service/            # Python — FastAPI Admin API
+│   ├── app/
+│   │   ├── routers/          # cycle_rules, treatment_data, ai_suggest
+│   │   ├── services/         # 비즈니스 로직 + Bedrock AI
+│   │   ├── repositories/     # 데이터 액세스
+│   │   └── models/schemas/   # ORM + Pydantic
+│   └── migrations/           # Alembic
+├── web/                      # TypeScript — Next.js Frontend
+│   └── src/
+│       ├── app/              # App Router pages
+│       ├── components/       # 21개 UI 컴포넌트
+│       └── hooks/            # 12개 React Query hooks
+├── docker-compose.yml        # 로컬 개발 환경
+├── Taskfile.yml              # 프로젝트 명령어
 ├── .kiro/
-│   ├── steering/                  # Steering 규칙
-│   │   └── aws-aidlc-rules/
-│   │       └── core-workflow.md   # AIDLC 워크플로우 제어
-│   └── aws-aidlc-rule-details/    # 단계별 상세 규칙
-└── README.md
+│   ├── steering/             # 8개 Steering 규칙 파일
+│   └── agents/               # AI-DLC + Wireframe Agent
+├── aidlc-docs/               # AI-DLC 설계 산출물 (23개 문서)
+└── docs/PRD.md
 ```
 
 ---
@@ -347,19 +342,38 @@ Phase 2 (AI 추천 주기) 확장을 고려한 설계:
 ## 6. 실행 방법
 
 ```bash
-# 로컬 환경 구동 (Docker Compose)
-docker-compose up -d
+# 전체 서비스 실행 (Docker Compose)
+task up
 
-# 각 서비스 개별 실행
+# 헬스체크
+task health
+
+# 로그 확인
+task logs
+
+# 서비스 중지
+task down
+
+# DB 초기화
+task db:reset
+```
+
+개별 실행:
+```bash
 # Calendar API (Go)
-cd calendar-service && go run cmd/api/main.go
+cd calendar-service && task run
 
 # Admin API (FastAPI)
 cd admin-service && uvicorn app.main:app --port 8081
 
 # Frontend (Next.js)
-cd web && npm run dev
+cd web && pnpm dev
 ```
+
+접속:
+- Frontend: http://localhost:3000/calendar
+- Calendar API: http://localhost:8080/health
+- Admin API: http://localhost:8081/health
 
 ---
 
