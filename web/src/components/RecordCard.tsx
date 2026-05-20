@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardBody } from "@heroui/react";
 import type { TreatmentRecord } from "@/types";
 
 export interface RecordCardProps {
@@ -10,27 +9,19 @@ export interface RecordCardProps {
 
 export function RecordCard({ record, onClick }: RecordCardProps) {
   return (
-    <Card
-      isPressable={!!onClick}
-      onPress={() => onClick?.(record)}
-      className="border border-solid border-gray-200 shadow-sm"
+    <button
+      onClick={() => onClick?.(record)}
+      className="w-full text-left border border-black/15 rounded-xl p-4 hover:bg-gray-50 transition-colors"
     >
-      <CardBody className="p-3 gap-1">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold text-black">
-            {record.hospital_name}
-          </span>
-          <span className="text-xs text-gray-description">
-            {record.source === "AUTO" ? "자동" : "수동"}
-          </span>
-        </div>
-        <p className="text-sm text-gray-description">
-          {record.treatment_date.slice(0, 10)}
-        </p>
-        {record.memo && (
-          <p className="text-xs text-gray-description truncate">{record.memo}</p>
-        )}
-      </CardBody>
-    </Card>
+      <p className="text-[15px] font-semibold text-black">
+        {record.hospital_name}
+      </p>
+      <p className="text-[13px] text-gray-description mt-1">
+        {record.treatment_date.slice(0, 10).replace(/-/g, ".")}
+      </p>
+      <span className="inline-block mt-2 text-[11px] px-2 py-0.5 bg-gray-100 rounded text-gray-description">
+        확정
+      </span>
+    </button>
   );
 }

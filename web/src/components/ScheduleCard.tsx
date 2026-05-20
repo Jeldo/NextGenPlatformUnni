@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardBody } from "@heroui/react";
 import type { ScheduledTreatment } from "@/types";
 
 export interface ScheduleCardProps {
@@ -10,22 +9,19 @@ export interface ScheduleCardProps {
 
 export function ScheduleCard({ schedule, onClick }: ScheduleCardProps) {
   return (
-    <Card
-      isPressable={!!onClick}
-      onPress={() => onClick?.(schedule)}
-      className="border border-dashed border-primary/50 shadow-sm"
+    <button
+      onClick={() => onClick?.(schedule)}
+      className="w-full text-left border border-dashed border-black/20 rounded-xl p-4 hover:bg-gray-50 transition-colors"
     >
-      <CardBody className="p-3 gap-1">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-semibold text-primary">예정</span>
-          <span className="text-xs text-gray-description">
-            {schedule.cycle_days}일 주기
-          </span>
-        </div>
-        <p className="text-sm text-gray-description">
-          {schedule.scheduled_date.slice(0, 10)}
-        </p>
-      </CardBody>
-    </Card>
+      <p className="text-[15px] font-semibold text-black">
+        예정
+      </p>
+      <p className="text-[13px] text-gray-description mt-1">
+        추천 주기 기반
+      </p>
+      <span className="inline-block mt-2 text-[11px] px-2 py-0.5 bg-gray-100 rounded text-gray-description">
+        예정 — 탭하여 확인
+      </span>
+    </button>
   );
 }

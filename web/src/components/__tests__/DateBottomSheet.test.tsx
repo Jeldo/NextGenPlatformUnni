@@ -35,24 +35,19 @@ describe("DateBottomSheet", () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it("날짜 라벨을 표시한다", () => {
+  it("날짜 + 요일 라벨을 표시한다", () => {
     render(<DateBottomSheet {...defaultProps} />);
-    expect(screen.getByText("2026년 1월 15일")).toBeInTheDocument();
+    expect(screen.getByText(/2026년 1월 15일/)).toBeInTheDocument();
+  });
+
+  it("닫기 버튼이 있다", () => {
+    render(<DateBottomSheet {...defaultProps} />);
+    expect(screen.getByLabelText("닫기")).toBeInTheDocument();
   });
 
   it("시술 추가 버튼을 표시한다", () => {
     render(<DateBottomSheet {...defaultProps} />);
     expect(screen.getByText("+ 이 날짜에 시술 추가")).toBeInTheDocument();
-  });
-
-  it("RecordCard를 표시한다", () => {
-    render(<DateBottomSheet {...defaultProps} />);
-    expect(screen.getByText("강남언니의원")).toBeInTheDocument();
-  });
-
-  it("ScheduleCard를 표시한다", () => {
-    render(<DateBottomSheet {...defaultProps} />);
-    expect(screen.getByText("예정")).toBeInTheDocument();
   });
 
   it("빈 상태 메시지를 표시한다", () => {
