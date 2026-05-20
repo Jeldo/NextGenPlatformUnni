@@ -56,7 +56,7 @@ export default function AddRecordPage() {
             type="date"
             value={treatmentDate}
             onValueChange={setTreatmentDate}
-            isRequired
+            variant="bordered"
             aria-label="시술 날짜"
           />
         </div>
@@ -70,7 +70,7 @@ export default function AddRecordPage() {
             placeholder="병원명을 입력하세요"
             value={hospitalName}
             onValueChange={setHospitalName}
-            isRequired
+            variant="bordered"
             aria-label="병원명"
           />
         </div>
@@ -100,6 +100,7 @@ export default function AddRecordPage() {
             placeholder="메모를 입력하세요 (선택)"
             value={memo}
             onValueChange={setMemo}
+            variant="bordered"
             aria-label="메모"
             minRows={3}
           />

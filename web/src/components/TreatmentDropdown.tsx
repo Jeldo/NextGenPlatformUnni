@@ -27,9 +27,8 @@ export function TreatmentDropdown({
   const { data: dosageTypes = [] } = useDosageTypes(treatmentId);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-2">
       <Select
-        label="시술 카테고리"
         placeholder="카테고리 선택"
         selectedKeys={categoryId ? [categoryId] : []}
         onSelectionChange={(keys) => {
@@ -39,6 +38,9 @@ export function TreatmentDropdown({
           onDosageTypeChange("");
         }}
         aria-label="시술 카테고리"
+        variant="bordered"
+        size="md"
+        classNames={{ trigger: "border border-black/20 rounded-lg" }}
       >
         {categories.map((cat) => (
           <SelectItem key={cat.id}>{cat.name}</SelectItem>
@@ -46,7 +48,6 @@ export function TreatmentDropdown({
       </Select>
 
       <Select
-        label="시술명"
         placeholder="시술명 선택"
         isDisabled={!categoryId}
         selectedKeys={treatmentId ? [treatmentId] : []}
@@ -56,6 +57,9 @@ export function TreatmentDropdown({
           onDosageTypeChange("");
         }}
         aria-label="시술명"
+        variant="bordered"
+        size="md"
+        classNames={{ trigger: "border border-black/20 rounded-lg" }}
       >
         {treatments.map((t) => (
           <SelectItem key={t.id}>{t.name}</SelectItem>
@@ -64,7 +68,6 @@ export function TreatmentDropdown({
 
       {dosageTypes.length > 0 && (
         <Select
-          label="용량 단위"
           placeholder="단위 선택"
           isDisabled={!treatmentId}
           selectedKeys={dosageType ? [dosageType] : []}
@@ -73,6 +76,9 @@ export function TreatmentDropdown({
             onDosageTypeChange(key);
           }}
           aria-label="용량 단위"
+          variant="bordered"
+          size="md"
+          classNames={{ trigger: "border border-black/20 rounded-lg" }}
         >
           {dosageTypes.map((d) => (
             <SelectItem key={d.unit}>{d.unit}</SelectItem>
