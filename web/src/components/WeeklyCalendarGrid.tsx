@@ -77,7 +77,7 @@ export function WeeklyCalendarGrid({ records, schedules, onDateSelect }: WeeklyC
       {/* Day labels */}
       <div className="grid grid-cols-7 text-center text-[11px] text-gray-description mb-1 font-medium">
         {DAY_LABELS.map((label) => (
-          <span key={label} className="underline decoration-gray-300 underline-offset-2">{label}</span>
+          <span key={label}>{label}</span>
         ))}
       </div>
 

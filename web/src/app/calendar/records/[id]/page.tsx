@@ -6,7 +6,6 @@ import { Button, Input, Textarea, Modal, ModalContent, ModalHeader, ModalBody, M
 import { useRecord } from "@/hooks/useRecord";
 import { useUpdateRecord } from "@/hooks/useUpdateRecord";
 import { useDeleteRecord } from "@/hooks/useDeleteRecord";
-import { GoogleCalendarButton } from "@/components/GoogleCalendarButton";
 
 export default function RecordDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -134,10 +133,24 @@ export default function RecordDetailPage() {
 
       {/* Bottom fixed actions */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-black/8 px-5 py-3 pb-7 flex gap-2.5">
-        <GoogleCalendarButton title={title} date={record.treatment_date} />
-        <Button color="primary" size="lg" className="flex-1 font-semibold" onPress={startEdit}>
+        <button
+          onClick={() => {
+            const eventTitle = title;
+            const dateStr = record.treatment_date.slice(0, 10).replace(/-/g, "");
+            const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${dateStr}/${dateStr}`;
+            window.open(url, "_blank");
+          }}
+          className="flex-1 py-3.5 border border-black/20 rounded-xl text-[15px] font-medium text-black"
+          aria-label="구글 캘린더에 등록하기"
+        >
+          구글 캘린더 등록
+        </button>
+        <button
+          onClick={startEdit}
+          className="flex-1 py-3.5 bg-primary rounded-xl text-[15px] font-semibold text-white"
+        >
           수정하기
-        </Button>
+        </button>
       </div>
 
       {/* Delete Modal */}

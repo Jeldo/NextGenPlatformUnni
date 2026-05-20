@@ -58,8 +58,8 @@ export default function CalendarPage() {
         <h1 className="text-xl font-bold text-black">{monthLabel}</h1>
       </div>
 
-      {/* Weekly Calendar */}
-      <div className="bg-white px-4 pb-4 border-b border-black/5">
+      {/* Weekly Calendar - 라운드 박스 */}
+      <div className="bg-[#f5f5f5] rounded-xl px-4 py-3 border-b border-black/5">
         <WeeklyCalendarGrid
           records={records}
           schedules={schedules}
@@ -87,19 +87,19 @@ export default function CalendarPage() {
         <div className="flex flex-col gap-0">
           {lastRecord && (
             <div className="flex justify-between py-3 border-b border-black/5">
-              <span className="text-sm text-black">마지막 시술</span>
+              <span className="text-sm font-medium text-black">마지막 시술</span>
               <span className="text-sm text-gray-description">{formatShortDate(lastRecord.treatment_date)}</span>
             </div>
           )}
           {nextSchedule && (
             <div className="flex justify-between py-3 border-b border-black/5">
-              <span className="text-sm text-black">다음 예정일</span>
+              <span className="text-sm font-medium text-black">다음 예정일</span>
               <span className="text-sm text-gray-description">{formatShortDate(nextSchedule.scheduled_date)}</span>
             </div>
           )}
           {topCategory && (
             <div className="flex justify-between py-3">
-              <span className="text-sm text-black">가장 많은 시술</span>
+              <span className="text-sm font-medium text-black">가장 많은 시술</span>
               <span className="text-sm text-gray-description">{topCategory.category_name} ({topCategory.count}회)</span>
             </div>
           )}

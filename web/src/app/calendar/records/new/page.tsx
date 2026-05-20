@@ -80,26 +80,32 @@ export default function AddRecordPage() {
         <div className="flex flex-col gap-1.5">
           <label className="text-[13px] font-semibold text-black">시술 정보<span className="text-primary ml-0.5">*</span></label>
           <div className="flex flex-col gap-2">
-            <select
-              value={categoryId}
-              onChange={(e) => { setCategoryId(e.target.value); setTreatmentId(""); setDosageType(""); }}
-              className="w-full px-3.5 py-3 border border-black/20 rounded-lg text-[15px] text-black bg-white appearance-none"
-              aria-label="시술 카테고리"
-            >
-              <option value="">카테고리 선택</option>
-              {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-            </select>
+            <div className="relative">
+              <select
+                value={categoryId}
+                onChange={(e) => { setCategoryId(e.target.value); setTreatmentId(""); setDosageType(""); }}
+                className="w-full px-3.5 py-3 border border-black/20 rounded-lg text-[15px] text-black bg-white appearance-none pr-10"
+                aria-label="시술 카테고리"
+              >
+                <option value="">카테고리 선택</option>
+                {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-primary text-xs pointer-events-none">▼</span>
+            </div>
 
-            <select
-              value={treatmentId}
-              onChange={(e) => { setTreatmentId(e.target.value); setDosageType(""); }}
-              disabled={!categoryId}
-              className="w-full px-3.5 py-3 border border-black/20 rounded-lg text-[15px] text-black bg-white appearance-none disabled:bg-gray-50 disabled:text-gray-300"
-              aria-label="시술명"
-            >
-              <option value="">시술명 선택</option>
-              {treatments.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-            </select>
+            <div className="relative">
+              <select
+                value={treatmentId}
+                onChange={(e) => { setTreatmentId(e.target.value); setDosageType(""); }}
+                disabled={!categoryId}
+                className="w-full px-3.5 py-3 border border-black/20 rounded-lg text-[15px] text-black bg-white appearance-none pr-10 disabled:bg-gray-50 disabled:text-gray-300"
+                aria-label="시술명"
+              >
+                <option value="">시술명 선택</option>
+                {treatments.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+              </select>
+              <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-primary text-xs pointer-events-none">▼</span>
+            </div>
 
             {dosageTypes.length > 0 && (
               <div className="flex gap-2">
@@ -111,15 +117,18 @@ export default function AddRecordPage() {
                   className="flex-1 px-3.5 py-3 border border-black/20 rounded-lg text-[15px] text-black bg-white"
                   aria-label="용량"
                 />
-                <select
-                  value={dosageType}
-                  onChange={(e) => setDosageType(e.target.value)}
-                  className="w-[110px] px-3.5 py-3 border border-black/20 rounded-lg text-[15px] text-black bg-white appearance-none"
-                  aria-label="용량 단위"
-                >
-                  <option value="">단위</option>
-                  {dosageTypes.map((d) => <option key={d.unit} value={d.unit}>{d.unit}</option>)}
-                </select>
+                <div className="relative w-[110px]">
+                  <select
+                    value={dosageType}
+                    onChange={(e) => setDosageType(e.target.value)}
+                    className="w-full px-3.5 py-3 border border-black/20 rounded-lg text-[15px] text-black bg-white appearance-none pr-8"
+                    aria-label="용량 단위"
+                  >
+                    <option value="">단위</option>
+                    {dosageTypes.map((d) => <option key={d.unit} value={d.unit}>{d.unit}</option>)}
+                  </select>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-primary text-xs pointer-events-none">▼</span>
+                </div>
               </div>
             )}
           </div>
