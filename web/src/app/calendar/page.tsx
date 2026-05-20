@@ -15,7 +15,8 @@ import type { ScheduledTreatment } from "@/types";
 export default function CalendarPage() {
   const { data: records = [] } = useRecords("2026-01-01", "2026-12-31");
   const { data: schedules = [] } = useSchedules();
-  const { data: statistics = [] } = useStatistics();
+  const { data: statisticsData } = useStatistics();
+  const statistics = statisticsData?.stats ?? [];
   const completeSchedule = useCompleteSchedule();
   const deleteSchedule = useDeleteSchedule();
 

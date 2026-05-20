@@ -6,6 +6,7 @@ import { useCategories } from "@/hooks/useCategories";
 import { useTreatments } from "@/hooks/useTreatments";
 import { useDosageTypes } from "@/hooks/useDosageTypes";
 import { useCreateRecord } from "@/hooks/useCreateRecord";
+import { USER_ID } from "@/lib/api";
 
 export default function AddRecordPage() {
   const router = useRouter();
@@ -27,15 +28,19 @@ export default function AddRecordPage() {
 
   const handleSubmit = () => {
     if (!isValid) return;
+    const selectedCategory = categories.find(c => c.id === categoryId);
+    const selectedTreatment = treatments.find(t => t.id === treatmentId);
     createRecord(
       {
+        user_id: USER_ID,
         treatment_date: new Date(treatmentDate).toISOString(),
-        hospital_name: hospitalName,
+        hospital_name: hospitalName || undefined,
         category_id: categoryId,
+        category_name: selectedCategory?.name ?? "",
         treatment_id: treatmentId,
-        dosage_type: dosageType || undefined,
+        treatment_name: selectedTreatment?.name ?? "",
+        dosage_unit: dosageType || undefined,
         dosage_value: dosageValue || undefined,
-        memo: memo || undefined,
       },
       { onSuccess: () => router.push("/calendar") },
     );

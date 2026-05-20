@@ -1,0 +1,47 @@
+- generic [active] [ref=e1]:
+  - main [ref=e3]:
+    - heading "2026년 5월" [level=1] [ref=e5]
+    - grid "주간 캘린더" [ref=e7]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - button "이전 주" [ref=e10] [cursor=pointer]: ‹
+          - generic [ref=e11]: 5월 17일 — 5월 23일
+          - button "다음 주" [ref=e12] [cursor=pointer]: ›
+        - generic [ref=e13]:
+          - generic [ref=e14]: 확정
+          - generic [ref=e16]: 예정
+      - generic [ref=e18]:
+        - generic [ref=e19]: 일
+        - generic [ref=e20]: 월
+        - generic [ref=e21]: 화
+        - generic [ref=e22]: 수
+        - generic [ref=e23]: 목
+        - generic [ref=e24]: 금
+        - generic [ref=e25]: 토
+      - generic [ref=e26]:
+        - button "5월 17일" [ref=e27] [cursor=pointer]:
+          - generic [ref=e28]: "17"
+        - button "5월 18일" [ref=e29] [cursor=pointer]:
+          - generic [ref=e30]: "18"
+        - button "5월 19일" [ref=e31] [cursor=pointer]:
+          - generic [ref=e32]: "19"
+        - button "5월 20일" [ref=e33] [cursor=pointer]:
+          - generic [ref=e34]: "20"
+        - button "5월 21일" [ref=e35] [cursor=pointer]:
+          - generic [ref=e36]: "21"
+        - button "5월 22일" [ref=e37] [cursor=pointer]:
+          - generic [ref=e38]: "22"
+        - button "5월 23일" [ref=e39] [cursor=pointer]:
+          - generic [ref=e40]: "23"
+    - generic [ref=e41]:
+      - heading "나의 시술" [level=2] [ref=e42]
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - paragraph [ref=e45]: 이번 달 시술
+          - paragraph [ref=e46]: 0회
+        - generic [ref=e47]:
+          - paragraph [ref=e48]: 누적 시술
+          - paragraph [ref=e49]: 0회
+    - button "시술 추가하기" [ref=e50] [cursor=pointer]:
+      - img [ref=e51]
+  - alert [ref=e53]
