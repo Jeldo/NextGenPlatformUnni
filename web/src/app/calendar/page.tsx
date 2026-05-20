@@ -1,59 +1,51 @@
 "use client";
 
+import { useState } from "react";
 import { useRecords } from "@/hooks/useRecords";
 import { useSchedules } from "@/hooks/useSchedules";
 import { useStatistics } from "@/hooks/useStatistics";
+import { WeeklyCalendarGrid } from "@/components/WeeklyCalendarGrid";
+import { DateBottomSheet } from "@/components/DateBottomSheet";
+import { TreatmentStats } from "@/components/TreatmentStats";
+import { FloatingAddButton } from "@/components/FloatingAddButton";
+import type { ScheduledTreatment } from "@/types";
 
 export default function CalendarPage() {
-  const { data: records, isLoading: recordsLoading } = useRecords("2026-01-01", "2026-12-31");
-  const { data: schedules, isLoading: schedulesLoading } = useSchedules();
-  const { data: statistics, isLoading: statsLoading } = useStatistics();
+  const { data: records = [] } = useRecords("2026-01-01", "2026-12-31");
+  const { data: schedules = [] } = useSchedules();
+  const { data: statistics = [] } = useStatistics();
 
-  if (recordsLoading || schedulesLoading || statsLoading) {
-    return <div className="p-4">Loading...</div>;
-  }
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  const dateRecords = records.filter((r) => r.treatment_date.slice(0, 10) === selectedDate);
+  const dateSchedules = schedules.filter((s) => s.scheduled_date.slice(0, 10) === selectedDate);
+
+  const handleScheduleClick = (_schedule: ScheduledTreatment) => {
+    // Phase 4에서 ScheduleConfirmModal 연결
+  };
 
   return (
-    <main className="min-h-screen p-4">
-      <h1 className="text-2xl font-bold text-primary">시술 캘린더</h1>
+    <main className="min-h-screen p-4 pb-20">
+      <h1 className="text-xl font-bold mb-4">시술 캘린더</h1>
 
-      {/* WeeklyCalendarGrid placeholder */}
-      <section className="mt-4">
-        <h2 className="text-lg font-semibold">시술 기록 ({records?.length ?? 0}건)</h2>
-        <ul className="mt-2 space-y-2">
-          {records?.map((r) => (
-            <li key={r.id} className="border rounded p-3">
-              <span className="font-medium">{r.hospital_name}</span>
-              <span className="text-gray-description ml-2">{r.treatment_date.slice(0, 10)}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <WeeklyCalendarGrid
+        records={records}
+        schedules={schedules}
+        onDateSelect={setSelectedDate}
+      />
 
-      {/* Schedules */}
-      <section className="mt-4">
-        <h2 className="text-lg font-semibold">예정일 ({schedules?.length ?? 0}건)</h2>
-        <ul className="mt-2 space-y-2">
-          {schedules?.map((s) => (
-            <li key={s.id} className="border border-dashed rounded p-3">
-              <span>{s.scheduled_date.slice(0, 10)}</span>
-              <span className="text-gray-description ml-2">{s.status}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <TreatmentStats statistics={statistics} />
 
-      {/* TreatmentStats */}
-      <section className="mt-4">
-        <h2 className="text-lg font-semibold">시술 통계</h2>
-        <ul className="mt-2 flex gap-4">
-          {statistics?.map((s) => (
-            <li key={s.category_id} className="bg-gray-100 rounded px-3 py-1">
-              {s.category_name} {s.count}회
-            </li>
-          ))}
-        </ul>
-      </section>
+      <DateBottomSheet
+        date={selectedDate ?? ""}
+        records={dateRecords}
+        schedules={dateSchedules}
+        isOpen={!!selectedDate}
+        onClose={() => setSelectedDate(null)}
+        onScheduleClick={handleScheduleClick}
+      />
+
+      <FloatingAddButton />
     </main>
   );
 }

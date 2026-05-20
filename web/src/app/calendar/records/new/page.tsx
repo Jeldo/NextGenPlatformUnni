@@ -1,80 +1,90 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCategories } from "@/hooks/useCategories";
-import { useTreatments } from "@/hooks/useTreatments";
-import { useDosageTypes } from "@/hooks/useDosageTypes";
+import { useRouter } from "next/navigation";
+import { Button, Input, Textarea } from "@heroui/react";
+import { TreatmentDropdown } from "@/components/TreatmentDropdown";
+import { DosageInput } from "@/components/DosageInput";
+import { HospitalInput } from "@/components/HospitalInput";
 import { useCreateRecord } from "@/hooks/useCreateRecord";
 
 export default function AddRecordPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const prefillDate = searchParams.get("date") || "";
+  const { mutate: createRecord, isPending } = useCreateRecord();
 
-  const [date, setDate] = useState(prefillDate);
+  const [treatmentDate, setTreatmentDate] = useState("");
   const [hospitalName, setHospitalName] = useState("");
-  const [categoryId, setCategoryId] = useState<string | null>(null);
-  const [treatmentId, setTreatmentId] = useState<string | null>(null);
-  const [dosageType, setDosageType] = useState<string | null>(null);
+  const [categoryId, setCategoryId] = useState("");
+  const [treatmentId, setTreatmentId] = useState("");
+  const [dosageType, setDosageType] = useState("");
   const [dosageValue, setDosageValue] = useState("");
   const [memo, setMemo] = useState("");
 
-  const { data: categories } = useCategories();
-  const { data: treatments } = useTreatments(categoryId);
-  const { data: dosageTypes } = useDosageTypes(treatmentId);
-  const createRecord = useCreateRecord();
+  const isValid = treatmentDate && hospitalName && categoryId && treatmentId;
 
   const handleSubmit = () => {
-    if (!date || !categoryId || !treatmentId || !hospitalName) return;
-    createRecord.mutate(
+    if (!isValid) return;
+    createRecord(
       {
+        treatment_date: new Date(treatmentDate).toISOString(),
+        hospital_name: hospitalName,
         category_id: categoryId,
         treatment_id: treatmentId,
         dosage_type: dosageType || undefined,
         dosage_value: dosageValue || undefined,
-        treatment_date: new Date(date).toISOString(),
-        hospital_name: hospitalName,
         memo: memo || undefined,
       },
-      { onSuccess: () => router.push("/calendar") }
+      { onSuccess: () => router.push("/calendar") },
     );
   };
 
   return (
-    <main className="min-h-screen p-4">
-      <h1 className="text-xl font-bold">시술 추가</h1>
+    <main className="min-h-screen p-4 pb-20">
+      <h1 className="text-xl font-bold mb-6">시술 추가</h1>
 
-      <div className="mt-4 space-y-4">
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="border rounded p-2 w-full" />
-        <input placeholder="병원명" value={hospitalName} onChange={(e) => setHospitalName(e.target.value)} className="border rounded p-2 w-full" />
+      <div className="flex flex-col gap-4">
+        <Input
+          type="date"
+          label="시술 날짜"
+          value={treatmentDate}
+          onValueChange={setTreatmentDate}
+          isRequired
+          aria-label="시술 날짜"
+        />
 
-        {/* Category dropdown */}
-        <select value={categoryId || ""} onChange={(e) => { setCategoryId(e.target.value); setTreatmentId(null); }} className="border rounded p-2 w-full">
-          <option value="">카테고리 선택</option>
-          {categories?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </select>
+        <HospitalInput value={hospitalName} onChange={setHospitalName} />
 
-        {/* Treatment dropdown */}
-        <select value={treatmentId || ""} onChange={(e) => setTreatmentId(e.target.value)} disabled={!categoryId} className="border rounded p-2 w-full">
-          <option value="">시술명 선택</option>
-          {treatments?.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-        </select>
+        <TreatmentDropdown
+          categoryId={categoryId}
+          treatmentId={treatmentId}
+          dosageType={dosageType}
+          onCategoryChange={setCategoryId}
+          onTreatmentChange={setTreatmentId}
+          onDosageTypeChange={setDosageType}
+        />
 
-        {/* Dosage */}
-        <div className="flex gap-2">
-          <select value={dosageType || ""} onChange={(e) => setDosageType(e.target.value)} disabled={!treatmentId} className="border rounded p-2">
-            <option value="">단위</option>
-            {dosageTypes?.map((d) => <option key={d.id} value={d.unit}>{d.unit}</option>)}
-          </select>
-          <input type="number" placeholder="용량" value={dosageValue} onChange={(e) => setDosageValue(e.target.value)} className="border rounded p-2 flex-1" />
-        </div>
+        {dosageType && (
+          <DosageInput value={dosageValue} unit={dosageType} onChange={setDosageValue} />
+        )}
 
-        <textarea placeholder="메모 (선택)" value={memo} onChange={(e) => setMemo(e.target.value)} className="border rounded p-2 w-full" />
+        <Textarea
+          label="메모 (선택)"
+          placeholder="추가 메모를 입력하세요"
+          value={memo}
+          onValueChange={setMemo}
+          aria-label="메모"
+        />
 
-        <button onClick={handleSubmit} disabled={createRecord.isPending} className="bg-primary text-white rounded p-3 w-full font-semibold">
-          {createRecord.isPending ? "저장 중..." : "저장"}
-        </button>
+        <Button
+          color="primary"
+          size="lg"
+          className="w-full mt-4"
+          isDisabled={!isValid}
+          isLoading={isPending}
+          onPress={handleSubmit}
+        >
+          저장
+        </Button>
       </div>
     </main>
   );
