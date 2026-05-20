@@ -273,19 +273,3 @@
 **Context**: CONSTRUCTION phase start. Unit 1 is next.
 
 ---
-
-## Construction - Unit 3-B (Go Backend) Start
-**Timestamp**: 2026-05-20T15:34:55+09:00
-**User Input**: "3-B만 하자."
-**AI Response**: Starting Unit 3-B Functional Design for Go Calendar Service.
-**Context**: CONSTRUCTION - Unit 3-B. Go Calendar Service full implementation.
-
----
-
-## Construction - Unit 3-B Functional Design Comments Applied
-**Timestamp**: 2026-05-20T15:53:36+09:00
-**User Input**: "A" (CycleRule과 리마인드 모두 treatment 단위로 변경)
-**AI Response**: 8개 주석 반영: (1) seq BIGSERIAL 추가, (2) UUID 앱에서 생성, (3) enum CHECK 제거→앱 검증, (4) 시간 앱 주입, (5) 인덱스 조회패턴 교차검증, (6) Go 최신+echo+Docker Compose DB 테스트, (7) CycleRule categoryId→treatmentId, (8) 리마인드 category→treatment. 관련 aidlc 문서 동기화: calendar-service.md, admin-service.md, requirements.md, tech.md.
-**Context**: CONSTRUCTION - Unit 3-B Functional Design.
-
----
