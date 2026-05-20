@@ -373,3 +373,65 @@
 **User Input**: "wireframes/ 하위의 스크린샷을 확인하고 디자인의 정합성이 맞는지 체크해줘. 그리고 지금 내가 확인해봤을 때 디자인이 이렇게 정리되어있지 않거든? 참고해서 꼼꼼하게 수정해줘. ui 디자이너 관점에서"
 **AI Response**: 와이어프레임 3장(CalendarPage, AddRecordPage, RecordDetailPage) 대비 현재 구현 차이점 분석 후 전면 수정. CalendarPage('나의 시술' 섹션 추가), WeeklyCalendarGrid(확정=검정, 예정=점선, 범례, 오늘=주황원), RecordDetailPage(헤더+아이콘행+하단고정+삭제모달), AddRecordPage(헤더+섹션라벨+그룹핑). 37개 테스트 유지, 브라우저 검증 완료.
 **Context**: CONSTRUCTION - Unit 3-A 디자인 정합성 수정 완료.
+
+---
+
+## Construction - Unit 3-C: Admin Service Full Implementation
+**Timestamp**: 2026-05-20T16:04:12+09:00
+**User Input**: "바로 구현을 하고, 데이터는 이때, [seed_data.json 첨부] 을 참고해서 초기 mockup 데이터도 docker-compose 업로드 시 가져가야 할 것 같은데 관련 부분도 구성해줘"
+**AI Response**: Admin Service 전체 구현 완료:
+- **DB Layer**: async SQLAlchemy engine + session (asyncpg), 4개 ORM 모델 (Category, Treatment, DosageType, CycleRule) with cascade relationships
+- **Schemas**: Pydantic v2 DTOs (Create/Update/Response) with validation (unit pattern, cycle_days gt=0)
+- **Repositories**: TreatmentDataRepository, CycleRuleRepository (async CRUD)
+- **Services**: TreatmentDataService, CycleRuleService (비즈니스 로직: 중복 409, 미존재 404, cascade delete)
+- **Routers**: cycle_rules (5 endpoints), treatment_data (11 endpoints) = 총 16 REST API
+- **Migration**: Alembic async 설정 + 001_initial_schema.py
+- **Seed**: seed.py (seed_data.json → DB 삽입, 멱등)
+- **Docker**: entrypoint.sh (migration → seed → uvicorn), Dockerfile 업데이트, docker-compose.yml asyncpg URL
+- **검증**: Docker build 성공, 모든 import/route 정상 등록 확인
+**Context**: CONSTRUCTION - Unit 3-C Code Generation. Admin Service 구현 완료.
+
+---
+
+## Construction - Progress Summary
+**Timestamp**: 2026-05-20T16:13:03+09:00
+**AI Response**: 현재까지 진행 상황 및 남은 작업 정리.
+
+### ✅ 완료된 단계:
+| Unit | 상태 | 내용 |
+|------|------|------|
+| Unit 1: 환경설정 | ✅ 완료 | Go/Next.js/FastAPI 프로젝트 구조, Docker Compose, Health Check |
+| Unit 2: 인터페이스 확정 | ✅ 완료 | 모든 API 스텁 + dummy 데이터 + 프론트 기본 레이아웃 |
+| Unit 3-C: Admin Service | ✅ 완료 | 전체 CRUD 구현 + DB 마이그레이션 + 시드 데이터 (6 카테고리, 29 시술, 29 용량단위, 29 주기규칙) |
+
+### 🔲 남은 작업:
+| Unit | 상태 | 내용 |
+|------|------|------|
+| Unit 3-A: Frontend | 🔲 미착수 | 모든 UI 컴포넌트 + 인터랙션 구현 (WeeklyCalendarGrid, BottomSheet, 폼, 통계 등) |
+| Unit 3-B: Backend (Go) | 🔲 미착수 | Calendar Service 전체 비즈니스 로직 (Domain/Application/Infrastructure/Presentation 4-layer) |
+| NFR Requirements | 🔲 미착수 | 성능/보안/확장성 요구사항 정의 |
+| NFR Design | 🔲 미착수 | Circuit Breaker, 멱등성, DLQ 등 NFR 패턴 설계 |
+| Build and Test | 🔲 미착수 | 빌드/테스트 지침서 생성 |
+
+### 병렬 개발 가능 항목 (Unit 3-A, 3-B는 독립):
+- **Unit 3-A (Frontend)**: React Query hooks → UI 컴포넌트 → 페이지 조합
+- **Unit 3-B (Backend Go)**: Domain Model → CQRS Handlers → Infrastructure → Presentation
+
+**Context**: CONSTRUCTION - Progress tracking.
+
+---
+
+## Construction - AI Suggest Endpoint (Bedrock Claude Opus)
+**Timestamp**: 2026-05-20T16:17:56+09:00
+**User Input**: "us-east-1에 정확도를 위해 opus 모델을 사용하고 싶어. 업데이트 주기가 많지 않기 때문에 괜찮을 것 같아."
+**AI Response**: Bedrock Claude Opus AI suggest 엔드포인트 구현 완료:
+- **엔드포인트**: `POST /api/ai/suggest-treatment`
+- **입력**: `{"treatment_name": "사각턱 보톡스"}`
+- **출력**: `{"category": "보톡스", "cycle_days": 168, "dosage_unit": "volume", "reasoning": "..."}`
+- **모델**: `us.anthropic.claude-opus-4-1-20250805-v1:0` (US Geo cross-region inference)
+- **구현**: app/services/ai_suggest.py (Bedrock invoke_model), app/routers/ai_suggest.py
+- **Docker**: AWS credentials 환경변수 전달 (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN)
+- **검증**: Docker build 성공, 22 routes 등록 확인
+**Context**: CONSTRUCTION - Unit 3-C. AWS AI 서비스 활용 (기술 활용도 개선).
+
+---

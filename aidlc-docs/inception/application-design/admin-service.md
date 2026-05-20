@@ -192,3 +192,65 @@ class DosageTypeResponse(BaseModel):
 - Calendar Service가 이 서비스의 API를 호출하여 주기/시술 데이터 조회
 - 호출 경로: `GET /api/cycle-rules/{treatmentId}`, `GET /api/categories`, etc.
 - 이 서비스가 다운되면: Calendar Service는 예정일 미생성 (graceful degradation)
+
+---
+
+## AI Suggest (AWS Bedrock 연동)
+
+> 시술명을 입력하면 LLM이 카테고리, 추천 주기, 용량 단위를 예측하여 관리자에게 제안
+
+### Architecture
+
+```
+Admin Client → POST /api/ai/suggest-treatment
+  → AISuggestService → AWS Bedrock (Claude Opus)
+  → 예측 결과 반환 (관리자가 확인 후 저장)
+```
+
+### Components
+
+| Component | 책임 |
+|-----------|------|
+| **AISuggestRouter** | AI 추천 엔드포인트 라우팅 |
+| **AISuggestService** | Bedrock 호출 + 응답 파싱 |
+
+### REST API Endpoint
+
+| Method | Path | 설명 | 응답 |
+|--------|------|------|------|
+| POST | /api/ai/suggest-treatment | 시술 정보 AI 예측 | 200 |
+
+### Request/Response
+
+```python
+# Request
+class SuggestRequest(BaseModel):
+    treatment_name: str  # 예: "사각턱 보톡스"
+
+# Response
+class SuggestResponse(BaseModel):
+    category: str       # 예측된 카테고리 (리프팅/스킨부스터/레이저/여드름·모공/보톡스/필러)
+    cycle_days: int     # 예측된 추천 주기 (일)
+    dosage_unit: str    # 예측된 용량 단위 (shot/minute/volume/vial/unit/joule)
+    reasoning: str      # 판단 근거
+```
+
+### Method Flow
+
+```
+1. 시술명 입력 수신
+2. System Prompt + 시술명으로 Bedrock Claude Opus 호출
+3. JSON 응답 파싱
+4. SuggestResponse 반환
+
+에러: Bedrock 호출 실패→502, JSON 파싱 실패→502
+```
+
+### AWS Configuration
+
+| 항목 | 값 |
+|------|-----|
+| Region | us-east-1 |
+| Model ID | us.anthropic.claude-opus-4-1-20250805-v1:0 |
+| Inference | US Geo cross-region |
+| Max Tokens | 256 |

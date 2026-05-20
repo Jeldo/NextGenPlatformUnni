@@ -128,12 +128,13 @@ Unit 3: 병렬 개발
 | **완료 기준** | 모든 CRUD 동작 + 시술 데이터 시딩 완료 |
 
 #### 포함 작업:
-- [ ] CycleRuleService + Repository (CRUD + 검증)
-- [ ] TreatmentDataService + Repository (Category/Treatment/DosageType CRUD)
-- [ ] Cascade Delete 구현
-- [ ] DB 마이그레이션 (categories, treatments, dosage_types, cycle_rules 테이블)
-- [ ] 초기 시술 마스터 데이터 시딩 (보톡스, 필러, 레이저 등 카테고리 + 시술명 + 단위)
-- [ ] 초기 추천 주기 데이터 시딩 (카테고리별 기본 주기)
+- [x] CycleRuleService + Repository (CRUD + 검증)
+- [x] TreatmentDataService + Repository (Category/Treatment/DosageType CRUD)
+- [x] Cascade Delete 구현
+- [x] DB 마이그레이션 (categories, treatments, dosage_types, cycle_rules 테이블)
+- [x] 초기 시술 마스터 데이터 시딩 (보톡스, 필러, 레이저 등 카테고리 + 시술명 + 단위)
+- [x] 초기 추천 주기 데이터 시딩 (카테고리별 기본 주기)
+- [x] AI Suggest 엔드포인트 (AWS Bedrock Claude Opus — 시술 카테고리/주기/단위 예측)
 - [ ] 단위 테스트
 
 ---

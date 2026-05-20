@@ -64,10 +64,18 @@
 |-----------|-----------|-----------|
 | Router | CycleRuleService | 직접 호출 |
 | Router | TreatmentDataService | 직접 호출 |
+| Router | AISuggestService | 직접 호출 |
 | CycleRuleService | CycleRuleRepository | 직접 호출 |
 | TreatmentDataService | TreatmentDataRepository | 직접 호출 |
 | CycleRuleRepository | PostgreSQL | SQLAlchemy |
 | TreatmentDataRepository | PostgreSQL | SQLAlchemy |
+| AISuggestService | AWS Bedrock | boto3 (HTTP) |
+
+### Admin API — External Dependencies
+
+| Adapter | 외부 시스템 | 프로토콜 | Timeout | 비고 |
+|---------|-----------|----------|---------|------|
+| AISuggestService | AWS Bedrock (Claude Opus) | HTTPS (boto3) | 30s (default) | us-east-1, cross-region inference |
 
 ---
 

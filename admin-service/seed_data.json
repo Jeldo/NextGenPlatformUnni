@@ -1,0 +1,498 @@
+{
+  "categories": [
+    {
+      "id": "019e442a-cf91-7000-90ad-d0b31275fcf2",
+      "name": "리프팅"
+    },
+    {
+      "id": "019e442a-cf92-7000-9d86-eb90499fbc4e",
+      "name": "스킨부스터"
+    },
+    {
+      "id": "019e442a-cf92-7000-85f6-d1f02ec57cea",
+      "name": "레이저 (색소/홍조)"
+    },
+    {
+      "id": "019e442a-cf92-7000-8c2b-78007a73ca2d",
+      "name": "여드름·모공"
+    },
+    {
+      "id": "019e442a-cf92-7000-a420-0d1ca964254d",
+      "name": "보톡스"
+    },
+    {
+      "id": "019e442a-cf92-7000-8107-33dc31ec6dee",
+      "name": "필러"
+    }
+  ],
+  "treatments": [
+    {
+      "id": "019e442a-cf92-7000-a4ec-61cc66c26af2",
+      "category_id": "019e442a-cf91-7000-90ad-d0b31275fcf2",
+      "name": "울쎄라",
+      "typical_range": "300~600샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-9bc4-fd12874e29ad",
+      "category_id": "019e442a-cf91-7000-90ad-d0b31275fcf2",
+      "name": "슈링크 유니버스",
+      "typical_range": "300~700샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-8df3-de3447b64cdd",
+      "category_id": "019e442a-cf91-7000-90ad-d0b31275fcf2",
+      "name": "써마지 FLX",
+      "typical_range": "600~900샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-b9ee-63d7bb459841",
+      "category_id": "019e442a-cf91-7000-90ad-d0b31275fcf2",
+      "name": "올리지오",
+      "typical_range": "300~600샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-9cc5-89f81abf9846",
+      "category_id": "019e442a-cf91-7000-90ad-d0b31275fcf2",
+      "name": "인모드",
+      "typical_range": "FORMA 10~15분, FRACTORA 200~400샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-8c1f-80b9511eaeab",
+      "category_id": "019e442a-cf92-7000-9d86-eb90499fbc4e",
+      "name": "물광주사",
+      "typical_range": "1~2mL"
+    },
+    {
+      "id": "019e442a-cf92-7000-ba70-c47b9c72ddc1",
+      "category_id": "019e442a-cf92-7000-9d86-eb90499fbc4e",
+      "name": "리쥬란힐러",
+      "typical_range": "2mL/회"
+    },
+    {
+      "id": "019e442a-cf92-7000-ab5e-1122dcd33c48",
+      "category_id": "019e442a-cf92-7000-9d86-eb90499fbc4e",
+      "name": "전안면 엑소좀",
+      "typical_range": "1~2 vial"
+    },
+    {
+      "id": "019e442a-cf92-7000-88f0-16b9d928ef75",
+      "category_id": "019e442a-cf92-7000-9d86-eb90499fbc4e",
+      "name": "두피 엑소좀",
+      "typical_range": "2~3 vial"
+    },
+    {
+      "id": "019e442a-cf92-7000-a9cd-cccf425e2067",
+      "category_id": "019e442a-cf92-7000-85f6-d1f02ec57cea",
+      "name": "피코슈어",
+      "typical_range": "1500~3000샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-af1a-2bcd545bb8af",
+      "category_id": "019e442a-cf92-7000-85f6-d1f02ec57cea",
+      "name": "레블라이트",
+      "typical_range": "1500~2500샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-a12d-41416b68da6f",
+      "category_id": "019e442a-cf92-7000-85f6-d1f02ec57cea",
+      "name": "브이빔 (혈관 레이저)",
+      "typical_range": "300~800샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-add0-2d1ab35d020d",
+      "category_id": "019e442a-cf92-7000-85f6-d1f02ec57cea",
+      "name": "엑셀브이",
+      "typical_range": "300~800샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-9c52-a260b1a5713e",
+      "category_id": "019e442a-cf92-7000-8c2b-78007a73ca2d",
+      "name": "아쿠아필",
+      "typical_range": "20~30분"
+    },
+    {
+      "id": "019e442a-cf92-7000-b943-3dc53b8ff57b",
+      "category_id": "019e442a-cf92-7000-8c2b-78007a73ca2d",
+      "name": "프락셀",
+      "typical_range": "20~70 mJ"
+    },
+    {
+      "id": "019e442a-cf92-7000-ad04-0f314661cb2b",
+      "category_id": "019e442a-cf92-7000-8c2b-78007a73ca2d",
+      "name": "포텐자",
+      "typical_range": "300~600샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-9094-c9f8954aa5e4",
+      "category_id": "019e442a-cf92-7000-8c2b-78007a73ca2d",
+      "name": "시크릿RF",
+      "typical_range": "300~500샷"
+    },
+    {
+      "id": "019e442a-cf92-7000-b64d-9b97c201c25f",
+      "category_id": "019e442a-cf92-7000-a420-0d1ca964254d",
+      "name": "미간 보톡스",
+      "typical_range": "20~25 U"
+    },
+    {
+      "id": "019e442a-cf92-7000-a094-1ad155f228b8",
+      "category_id": "019e442a-cf92-7000-a420-0d1ca964254d",
+      "name": "이마 보톡스",
+      "typical_range": "10~20 U"
+    },
+    {
+      "id": "019e442a-cf92-7000-b351-dd9014edb8a3",
+      "category_id": "019e442a-cf92-7000-a420-0d1ca964254d",
+      "name": "눈가 보톡스",
+      "typical_range": "양측 합 12~24 U"
+    },
+    {
+      "id": "019e442a-cf92-7000-a91b-84d280e21ed3",
+      "category_id": "019e442a-cf92-7000-a420-0d1ca964254d",
+      "name": "사각턱 보톡스",
+      "typical_range": "양측 합 50~100 U"
+    },
+    {
+      "id": "019e442a-cf92-7000-b2d0-83bf64fec033",
+      "category_id": "019e442a-cf92-7000-a420-0d1ca964254d",
+      "name": "승모근 보톡스",
+      "typical_range": "양측 합 100~200 U"
+    },
+    {
+      "id": "019e442a-cf92-7000-932a-3ddac2cd8145",
+      "category_id": "019e442a-cf92-7000-a420-0d1ca964254d",
+      "name": "윤곽주사 (지방분해)",
+      "typical_range": "5~10 mL"
+    },
+    {
+      "id": "019e442a-cf92-7000-bb2d-9546822b070b",
+      "category_id": "019e442a-cf92-7000-8107-33dc31ec6dee",
+      "name": "팔자주름 필러",
+      "typical_range": "1~2 mL"
+    },
+    {
+      "id": "019e442a-cf92-7000-a464-9ffc5905414f",
+      "category_id": "019e442a-cf92-7000-8107-33dc31ec6dee",
+      "name": "입술 필러",
+      "typical_range": "0.5~1 mL"
+    },
+    {
+      "id": "019e442a-cf92-7000-bade-b28ee8d6e8ff",
+      "category_id": "019e442a-cf92-7000-8107-33dc31ec6dee",
+      "name": "볼/광대 필러",
+      "typical_range": "1~3 mL"
+    },
+    {
+      "id": "019e442a-cf92-7000-b292-49ba8cb00ca9",
+      "category_id": "019e442a-cf92-7000-8107-33dc31ec6dee",
+      "name": "턱끝 필러",
+      "typical_range": "1~2 mL"
+    },
+    {
+      "id": "019e442a-cf92-7000-888b-0088f7213267",
+      "category_id": "019e442a-cf92-7000-8107-33dc31ec6dee",
+      "name": "이마 필러",
+      "typical_range": "2~4 mL"
+    },
+    {
+      "id": "019e442a-cf92-7000-b0df-eb34d8891fef",
+      "category_id": "019e442a-cf92-7000-8107-33dc31ec6dee",
+      "name": "눈밑(애교/다크서클) 필러",
+      "typical_range": "0.5~1 mL"
+    }
+  ],
+  "dosage_types": [
+    {
+      "id": "019e442a-cf92-7000-aca7-b788d9e432a3",
+      "treatment_id": "019e442a-cf92-7000-a4ec-61cc66c26af2",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-9c81-b1e5cbfe6d98",
+      "treatment_id": "019e442a-cf92-7000-9bc4-fd12874e29ad",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-844f-37d4d336e0f0",
+      "treatment_id": "019e442a-cf92-7000-8df3-de3447b64cdd",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-9562-fb7d9016ea36",
+      "treatment_id": "019e442a-cf92-7000-b9ee-63d7bb459841",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-8a8f-0b29a6e8bf3e",
+      "treatment_id": "019e442a-cf92-7000-9cc5-89f81abf9846",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-acf3-22adeb921728",
+      "treatment_id": "019e442a-cf92-7000-8c1f-80b9511eaeab",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-8466-b25976ef0101",
+      "treatment_id": "019e442a-cf92-7000-ba70-c47b9c72ddc1",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-887f-d40ca361ff77",
+      "treatment_id": "019e442a-cf92-7000-ab5e-1122dcd33c48",
+      "unit": "vial"
+    },
+    {
+      "id": "019e442a-cf92-7000-9cfe-b52382f44e45",
+      "treatment_id": "019e442a-cf92-7000-88f0-16b9d928ef75",
+      "unit": "vial"
+    },
+    {
+      "id": "019e442a-cf92-7000-ad0d-02c3598c7ffb",
+      "treatment_id": "019e442a-cf92-7000-a9cd-cccf425e2067",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-8191-314b4402a8a2",
+      "treatment_id": "019e442a-cf92-7000-af1a-2bcd545bb8af",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-b1b9-0ba1b284d61b",
+      "treatment_id": "019e442a-cf92-7000-a12d-41416b68da6f",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-82e6-024d2de23e84",
+      "treatment_id": "019e442a-cf92-7000-add0-2d1ab35d020d",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-a9ff-ec5acd668fd7",
+      "treatment_id": "019e442a-cf92-7000-9c52-a260b1a5713e",
+      "unit": "minute"
+    },
+    {
+      "id": "019e442a-cf92-7000-a8c2-a3adbf21c969",
+      "treatment_id": "019e442a-cf92-7000-b943-3dc53b8ff57b",
+      "unit": "joule"
+    },
+    {
+      "id": "019e442a-cf92-7000-8c5e-a001ec9bec53",
+      "treatment_id": "019e442a-cf92-7000-ad04-0f314661cb2b",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-8420-522ce68a59ac",
+      "treatment_id": "019e442a-cf92-7000-9094-c9f8954aa5e4",
+      "unit": "shot"
+    },
+    {
+      "id": "019e442a-cf92-7000-bcff-2336f5eab158",
+      "treatment_id": "019e442a-cf92-7000-b64d-9b97c201c25f",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-a123-ff5b31197635",
+      "treatment_id": "019e442a-cf92-7000-a094-1ad155f228b8",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-998e-62d150913c78",
+      "treatment_id": "019e442a-cf92-7000-b351-dd9014edb8a3",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-8d30-ff0042d8c464",
+      "treatment_id": "019e442a-cf92-7000-a91b-84d280e21ed3",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-b17c-cd3728c7bfa9",
+      "treatment_id": "019e442a-cf92-7000-b2d0-83bf64fec033",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-af67-b10c75ca9ead",
+      "treatment_id": "019e442a-cf92-7000-932a-3ddac2cd8145",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-ab3b-f59eede08cd1",
+      "treatment_id": "019e442a-cf92-7000-bb2d-9546822b070b",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-b823-813021ff4aaf",
+      "treatment_id": "019e442a-cf92-7000-a464-9ffc5905414f",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-91fc-650679e2114f",
+      "treatment_id": "019e442a-cf92-7000-bade-b28ee8d6e8ff",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-89d5-2071b5df093b",
+      "treatment_id": "019e442a-cf92-7000-b292-49ba8cb00ca9",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-a198-7a04c1dedac3",
+      "treatment_id": "019e442a-cf92-7000-888b-0088f7213267",
+      "unit": "volume"
+    },
+    {
+      "id": "019e442a-cf92-7000-8cf0-2ccdf7869bcd",
+      "treatment_id": "019e442a-cf92-7000-b0df-eb34d8891fef",
+      "unit": "volume"
+    }
+  ],
+  "cycle_rules": [
+    {
+      "treatment_id": "019e442a-cf92-7000-a4ec-61cc66c26af2",
+      "cycle_days": 336,
+      "description": "울쎄라 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-9bc4-fd12874e29ad",
+      "cycle_days": 336,
+      "description": "슈링크 유니버스 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-8df3-de3447b64cdd",
+      "cycle_days": 672,
+      "description": "써마지 FLX 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-b9ee-63d7bb459841",
+      "cycle_days": 672,
+      "description": "올리지오 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-9cc5-89f81abf9846",
+      "cycle_days": 28,
+      "description": "인모드 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-8c1f-80b9511eaeab",
+      "cycle_days": 28,
+      "description": "물광주사 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-ba70-c47b9c72ddc1",
+      "cycle_days": 28,
+      "description": "리쥬란힐러 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-ab5e-1122dcd33c48",
+      "cycle_days": 28,
+      "description": "전안면 엑소좀 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-88f0-16b9d928ef75",
+      "cycle_days": 28,
+      "description": "두피 엑소좀 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-a9cd-cccf425e2067",
+      "cycle_days": 28,
+      "description": "피코슈어 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-af1a-2bcd545bb8af",
+      "cycle_days": 14,
+      "description": "레블라이트 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-a12d-41416b68da6f",
+      "cycle_days": 28,
+      "description": "브이빔 (혈관 레이저) 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-add0-2d1ab35d020d",
+      "cycle_days": 28,
+      "description": "엑셀브이 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-9c52-a260b1a5713e",
+      "cycle_days": 28,
+      "description": "아쿠아필 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-b943-3dc53b8ff57b",
+      "cycle_days": 28,
+      "description": "프락셀 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-ad04-0f314661cb2b",
+      "cycle_days": 28,
+      "description": "포텐자 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-9094-c9f8954aa5e4",
+      "cycle_days": 28,
+      "description": "시크릿RF 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-b64d-9b97c201c25f",
+      "cycle_days": 168,
+      "description": "미간 보톡스 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-a094-1ad155f228b8",
+      "cycle_days": 168,
+      "description": "이마 보톡스 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-b351-dd9014edb8a3",
+      "cycle_days": 168,
+      "description": "눈가 보톡스 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-a91b-84d280e21ed3",
+      "cycle_days": 168,
+      "description": "사각턱 보톡스 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-b2d0-83bf64fec033",
+      "cycle_days": 168,
+      "description": "승모근 보톡스 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-932a-3ddac2cd8145",
+      "cycle_days": 28,
+      "description": "윤곽주사 (지방분해) 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-bb2d-9546822b070b",
+      "cycle_days": 504,
+      "description": "팔자주름 필러 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-a464-9ffc5905414f",
+      "cycle_days": 336,
+      "description": "입술 필러 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-bade-b28ee8d6e8ff",
+      "cycle_days": 504,
+      "description": "볼/광대 필러 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-b292-49ba8cb00ca9",
+      "cycle_days": 504,
+      "description": "턱끝 필러 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-888b-0088f7213267",
+      "cycle_days": 504,
+      "description": "이마 필러 추천 주기"
+    },
+    {
+      "treatment_id": "019e442a-cf92-7000-b0df-eb34d8891fef",
+      "cycle_days": 336,
+      "description": "눈밑(애교/다크서클) 필러 추천 주기"
+    }
+  ]
+}

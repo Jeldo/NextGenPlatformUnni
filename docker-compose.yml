@@ -37,8 +37,12 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - DATABASE_URL=postgres://calendar:calendar@postgres:5432/treatment_calendar?sslmode=disable
+      - DATABASE_URL=postgresql+asyncpg://calendar:calendar@postgres:5432/treatment_calendar
       - PORT=8081
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN:-}
     depends_on:
       postgres:
         condition: service_healthy

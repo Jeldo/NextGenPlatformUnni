@@ -7,10 +7,11 @@
 | **Calendar Web** | Next.js | App Router + React Query | 3000 | Vercel/독립 컨테이너 | SPA UI, 3단계 드롭다운, 캘린더 뷰, 구글 캘린더 연동 |
 | Calendar API | Go | Hexagonal | 8080 | 독립 컨테이너 | 시술 기록 CRUD, 예정일, 통계, 드롭다운 프록시 |
 | Event Consumer | Go | Hexagonal (공유) | — | 별도 컨테이너 | 예약 확정 이벤트 → 자동 기입 |
-| Admin API | Python/FastAPI | Layered CRUD | 8081 | 독립 컨테이너 | 시술 데이터 + 추천 주기 관리 |
+| Admin API | Python/FastAPI | Layered CRUD | 8081 | 독립 컨테이너 | 시술 데이터 + 추천 주기 관리 + AI 시술 정보 예측 (Bedrock) |
 
 **공유 인프라**: PostgreSQL (단일 DB)
 **UI 스택**: Tailwind CSS + HeroUI
+**AWS AI 서비스**: Amazon Bedrock (Claude Opus) — 시술 카테고리/주기 자동 예측
 
 ---
 
@@ -56,12 +57,14 @@
 [Calendar Web] ──REST──→ [Calendar API] ──────────────────→ │
 (Next.js)                     │                              │
                               ├──HTTP (3s timeout)──→ [Admin API] ──→ │
-                              │                                  
+                              │                           │
                               └──HTTP (5s timeout)──→ [알림 시스템]
 
 [Calendar Web] ──Google Calendar API──→ [Google Calendar] (클라이언트 직접)
 
 [Admin Client] ──REST──→ [Admin API] ──→ [PostgreSQL]
+                              │
+                              └──HTTPS (boto3)──→ [AWS Bedrock Claude Opus]
 ```
 
 ---

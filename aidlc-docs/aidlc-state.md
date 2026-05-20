@@ -3,12 +3,12 @@
 ## Project Information
 - **Project Type**: Greenfield
 - **Start Date**: 2026-05-20T11:38:51+09:00
-- **Current Stage**: CONSTRUCTION - Unit 3-A (Frontend) Code Generation
+- **Current Phase**: CONSTRUCTION
 
 ## Workspace State
-- **Existing Code**: Yes (Unit 1, 2 complete)
+- **Existing Code**: Yes (all services scaffolded, Frontend + Admin Service implemented)
 - **Reverse Engineering Needed**: No
-- **Workspace Root**: /Users/taeyoungkwak/GitHub/NextGenPlatformUnni
+- **Workspace Root**: /Users/glenn/aidlc-workshop/NextGenPlatformUnni
 
 ## Code Location Rules
 - **Application Code**: Workspace root (NEVER in aidlc-docs/)
@@ -53,20 +53,25 @@
 - [x] Functional Design
 - [ ] Code Generation
 
-#### Unit 3-C: Admin Service (FastAPI)
-- [ ] Functional Design
-- [ ] Code Generation
+#### Unit 3-C: Admin Service (FastAPI) — ✅ 완료
+- [x] CRUD 전체 구현 (16 endpoints)
+- [x] DB 마이그레이션 (Alembic)
+- [x] 시드 데이터 (6 카테고리, 29 시술, 29 용량단위, 29 주기규칙)
+- [x] AI Suggest 엔드포인트 (AWS Bedrock Claude Opus)
+- [ ] 단위 테스트
 
-#### Build and Test
-- [ ] Build and Test - EXECUTE
+#### Remaining
+- [ ] NFR Requirements
+- [ ] NFR Design
+- [ ] Build and Test
 
 ### 🟡 OPERATIONS PHASE
 - [ ] Operations - PLACEHOLDER
 
 ## Current Status
 - **Lifecycle Phase**: CONSTRUCTION
-- **Current Stage**: Unit 3-A Code Generation - Phase 6 (E2E 테스트)
-- **Next Stage**: Unit 3-A 완료 후 커밋
+- **Current Stage**: Unit 3 병렬 개발 (3-A Phase 5 완료, 3-B Functional Design 완료, 3-C 구현 완료)
+- **Next Stage**: Unit 3-A Phase 6 (E2E) / Unit 3-B Code Generation
 - **Status**: In Progress
 - **Package Manager**: pnpm (npm → pnpm 전환 완료)
 

@@ -95,6 +95,7 @@
 | **TreatmentDataService** | 시술 마스터 데이터 CRUD |
 | **CycleRuleRepository** | 추천 주기 DB 접근 |
 | **TreatmentDataRepository** | 시술 데이터 DB 접근 |
+| **AISuggestService** | AWS Bedrock Claude Opus 호출 → 시술 카테고리/주기/단위 예측 |
 
 ---
 

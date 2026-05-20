@@ -265,6 +265,7 @@ SQS.ReceiveMessage()
 | POST | /api/treatments/{id}/dosage-types | 용량 단위 생성 |
 | GET | /api/treatments/{id}/dosage-types | 용량 단위 목록 |
 | DELETE | /api/dosage-types/{id} | 용량 단위 삭제 |
+| POST | /api/ai/suggest-treatment | AI 시술 정보 예측 (Bedrock Claude Opus) |
 
 ### Cascade Delete Rules
 
